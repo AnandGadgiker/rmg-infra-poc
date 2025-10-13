@@ -51,7 +51,7 @@ jobs:
               --sku Standard_LRS \
               --kind StorageV2 \
               --encryption-services blob \
-              --tags Owner="$OWNER_TAG" Environment="$ENVIRONMENT_TAG"
+               --tags Owner="$OWNER_TAG" Environment="$ENVIRONMENT_TAG" Criticality="High"
           else
             echo "Storage Account $STORAGE_ACCOUNT already exists, skipping creation."
           fi
