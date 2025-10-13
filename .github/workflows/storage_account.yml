@@ -1,39 +1,38 @@
-name: Create Terraform Storage Account
+name: Create Generic Terraform Storage Account
 
 on:
   workflow_dispatch:
 
 jobs:
   create-storage:
-    name: Create Storage Account
     runs-on: ubuntu-latest
     env:
-      LOCATION: eastus        # Change if needed
+      LOCATION: eastus
       RESOURCE_GROUP: rmg-infra
-      STORAGE_ACCOUNT: rmginfrastate   # Generic name, must be globally unique
+      STORAGE_ACCOUNT: rmginfrastate
       CONTAINER: tfstate
     steps:
-      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Login to Azure
+      # Login to Azure using Service Principal secrets
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
+            }
 
-      # Create Resource Group
       - name: Create Resource Group
-        run: |
-          az group create --name "$RESOURCE_GROUP" --location "$LOCATION"
+        run: az group create --name "$RESOURCE_GROUP" --location "$LOCATION"
 
-      # Create Storage Account
       - name: Create Storage Account
         run: |
-          # Check if the storage account exists
           if az storage account check-name --name "$STORAGE_ACCOUNT" --query "nameAvailable" -o tsv | grep true; then
-            echo "Creating Storage Account: $STORAGE_ACCOUNT..."
             az storage account create \
               --name "$STORAGE_ACCOUNT" \
               --resource-group "$RESOURCE_GROUP" \
@@ -42,10 +41,9 @@ jobs:
               --kind StorageV2 \
               --encryption-services blob
           else
-            echo "Storage Account $STORAGE_ACCOUNT already exists, skipping creation."
+            echo "Storage Account $STORAGE_ACCOUNT already exists."
           fi
 
-      # Get Storage Account Key
       - name: Get Storage Account Key
         id: storage_key
         run: |
@@ -55,23 +53,16 @@ jobs:
             --query "[0].value" -o tsv)
           echo "ACCOUNT_KEY=$ACCOUNT_KEY" >> $GITHUB_ENV
 
-      # Create Blob Container
       - name: Create Blob Container
-        run: |
-          az storage container create \
-            --name "$CONTAINER" \
-            --account-name "$STORAGE_ACCOUNT" \
-            --account-key "$ACCOUNT_KEY"
+        run: az storage container create --name "$CONTAINER" --account-name "$STORAGE_ACCOUNT" --account-key "$ACCOUNT_KEY"
 
-      # Optional: Output backend config
-      - name: Save Backend Config
+      - name: Save Terraform backend config
         run: |
           echo "storage_account_name=$STORAGE_ACCOUNT" > backend.conf
           echo "container_name=$CONTAINER" >> backend.conf
           echo "key=terraform.tfstate" >> backend.conf
           echo "resource_group_name=$RESOURCE_GROUP" >> backend.conf
 
-      # Upload backend.conf as artifact
       - name: Upload backend.conf
         uses: actions/upload-artifact@v4
         with:
