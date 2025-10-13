@@ -3,19 +3,27 @@ name: Create Generic Terraform Storage Account
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   create-storage:
+    name: Create Storage Account
     runs-on: ubuntu-latest
     env:
-      LOCATION: eastus
+      LOCATION: eastus                # Change region if needed
       RESOURCE_GROUP: rmg-infra
-      STORAGE_ACCOUNT: rmginfrastate
+      STORAGE_ACCOUNT: rmginfrastate  # Generic, must be globally unique
       CONTAINER: tfstate
+      OWNER_TAG: Terraform            # Replace with your mandatory Owner value
+      ENVIRONMENT_TAG: Generic
     steps:
+      # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Login to Azure using Service Principal secrets
+      # Login to Azure using existing service principal secrets
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -27,23 +35,28 @@ jobs:
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
 
+      # Create Resource Group
       - name: Create Resource Group
         run: az group create --name "$RESOURCE_GROUP" --location "$LOCATION"
 
+      # Create Storage Account with mandatory tags
       - name: Create Storage Account
         run: |
           if az storage account check-name --name "$STORAGE_ACCOUNT" --query "nameAvailable" -o tsv | grep true; then
+            echo "Creating Storage Account: $STORAGE_ACCOUNT..."
             az storage account create \
               --name "$STORAGE_ACCOUNT" \
               --resource-group "$RESOURCE_GROUP" \
               --location "$LOCATION" \
               --sku Standard_LRS \
               --kind StorageV2 \
-              --encryption-services blob
+              --encryption-services blob \
+              --tags Owner="$OWNER_TAG" Environment="$ENVIRONMENT_TAG"
           else
-            echo "Storage Account $STORAGE_ACCOUNT already exists."
+            echo "Storage Account $STORAGE_ACCOUNT already exists, skipping creation."
           fi
 
+      # Get Storage Account Key
       - name: Get Storage Account Key
         id: storage_key
         run: |
@@ -53,16 +66,22 @@ jobs:
             --query "[0].value" -o tsv)
           echo "ACCOUNT_KEY=$ACCOUNT_KEY" >> $GITHUB_ENV
 
+      # Create Blob Container
       - name: Create Blob Container
-        run: az storage container create --name "$CONTAINER" --account-name "$STORAGE_ACCOUNT" --account-key "$ACCOUNT_KEY"
+        run: az storage container create \
+              --name "$CONTAINER" \
+              --account-name "$STORAGE_ACCOUNT" \
+              --account-key "$ACCOUNT_KEY"
 
-      - name: Save Terraform backend config
+      # Save Terraform backend config
+      - name: Save Backend Config
         run: |
           echo "storage_account_name=$STORAGE_ACCOUNT" > backend.conf
           echo "container_name=$CONTAINER" >> backend.conf
           echo "key=terraform.tfstate" >> backend.conf
           echo "resource_group_name=$RESOURCE_GROUP" >> backend.conf
 
+      # Upload backend.conf as artifact
       - name: Upload backend.conf
         uses: actions/upload-artifact@v4
         with:
