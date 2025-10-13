@@ -68,10 +68,12 @@ jobs:
 
       # Create Blob Container
       - name: Create Blob Container
-        run: az storage container create \
-              --name "$CONTAINER" \
-              --account-name "$STORAGE_ACCOUNT" \
-              --account-key "$ACCOUNT_KEY"
+        run: |
+          echo "Creating container $CONTAINER in storage account $STORAGE_ACCOUNT"
+          az storage container create \
+          --name "${CONTAINER}" \
+          --account-name "${STORAGE_ACCOUNT}" \
+          --account-key "${ACCOUNT_KEY}"
 
       # Save Terraform backend config
       - name: Save Backend Config
