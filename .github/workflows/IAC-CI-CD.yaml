@@ -1,4 +1,4 @@
-name: Terraform CI/CD (Azure)
+name: Terraform CI/CD for Resource creation
 
 on:
   workflow_dispatch:
