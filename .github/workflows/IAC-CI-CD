@@ -1,0 +1,157 @@
+name: Terraform CI/CD (Azure)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment (dev or uat)"
+        required: true
+        type: choice
+        default: "dev"
+        options:
+          - dev
+          - uat
+
+  pull_request:
+    branches: [ "main" ]
+
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  TF_VERSION: 1.11.4
+
+jobs:
+  ### ✅ Pull Request Checks
+  pr-checks:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      ENV: ${{ github.event.inputs.environment || 'dev' }}
+      WORKDIR: IAC/env/${{ github.event.inputs.environment || 'dev' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ env.WORKDIR }}
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ${{ env.WORKDIR }}
+
+      - name: Run TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: v0.55.0
+      - run: tflint
+        working-directory: ${{ env.WORKDIR }}
+
+      - name: Run Checkov (Security)
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ env.WORKDIR }}
+          framework: terraform
+
+  ### 🧭 Terraform Plan
+  terraform-plan:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: plan
+    env:
+      ENV: ${{ github.event.inputs.environment || 'dev' }}
+      WORKDIR: IAC/env/${{ github.event.inputs.environment || 'dev' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
+            }
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ env.WORKDIR }}
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -var-file="${{ env.ENV }}.tfvars" -out=tfplan
+        working-directory: ${{ env.WORKDIR }}
+
+      - name: Upload Plan File (for apply)
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan-${{ env.ENV }}
+          path: ${{ env.WORKDIR }}/tfplan
+
+  ### 🔒 Manual Approval before Apply
+  approval:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    environment:
+      name: approve-${{ github.event.inputs.environment || 'dev' }}
+      url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Await Manual Approval
+        run: echo "✅ Waiting for approval before apply."
+
+  ### 🚀 Terraform Apply
+  terraform-apply:
+    needs: approval
+    runs-on: ubuntu-latest
+    env:
+      ENV: ${{ github.event.inputs.environment || 'dev' }}
+      WORKDIR: IAC/env/${{ github.event.inputs.environment || 'dev' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
+            }
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan-${{ env.ENV }}
+          path: ${{ env.WORKDIR }}
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ env.WORKDIR }}
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: ${{ env.WORKDIR }}
