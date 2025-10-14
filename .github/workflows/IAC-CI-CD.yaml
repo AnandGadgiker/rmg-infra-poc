@@ -26,7 +26,7 @@ env:
   TF_VERSION: 1.11.4
 
 jobs:
-  ### ✅ Pull Request Checks
+  ### Pull Request Checks
   pr-checks:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -62,7 +62,7 @@ jobs:
           directory: ${{ env.WORKDIR }}
           framework: terraform
 
-  ### 🧭 Terraform Plan
+  ###  Terraform Plan
   terraform-plan:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -105,7 +105,7 @@ jobs:
           name: terraform-plan-${{ env.ENV }}
           path: ${{ env.WORKDIR }}/tfplan
 
-  ### 🔒 Manual Approval before Apply
+  ###  Manual Approval before Apply
   approval:
     needs: terraform-plan
     runs-on: ubuntu-latest
@@ -114,9 +114,9 @@ jobs:
       url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - name: Await Manual Approval
-        run: echo "✅ Waiting for approval before apply."
+        run: echo " Waiting for approval before apply."
 
-  ### 🚀 Terraform Apply
+  ###  Terraform Apply
   terraform-apply:
     needs: approval
     runs-on: ubuntu-latest
