@@ -1,3 +1,4 @@
-prefix = "uat"
-environment = "uat"
-location = "East US"
+location            = "uksouth"
+resource_group_name = "rmg-infra"
+subnet_id           = "<existing-subnet-id>"
+openai_sku          = "S0"
