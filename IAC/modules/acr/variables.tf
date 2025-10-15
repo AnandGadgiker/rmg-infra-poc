@@ -1,20 +1,16 @@
 variable "acr_name" {
-  type        = string
-  description = "Name of the Azure Container Registry"
+  type = string
 }
 
 variable "location" {
-  type        = string
-  description = "Azure region for the ACR"
+  type = string
 }
 
 variable "resource_group_name" {
-  type        = string
-  description = "Resource group where ACR will be deployed"
+  type = string
 }
 
 variable "key_vault_key_id" {
-  type        = string
-  description = "ID of the Key Vault key used for ACR encryption"
-  default     = null
+  type    = string
+  default = null
 }

@@ -29,4 +29,3 @@ variable "app_service_name" {
 variable "app_service_default_hostname" {
   type = string
 }
-    

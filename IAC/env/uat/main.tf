@@ -15,13 +15,11 @@ module "app_service" {
   app_service_name      = var.app_service_name
   location              = var.location
   resource_group_name   = var.resource_group_name
-  kind                  = "Linux"
-  sku_tier              = "P1v2"
-  sku_size              = "P1v2"
   app_settings = {
     ENV               = var.env
     AAD_CLIENT_SECRET = module.kv.aad_client_secret_name
   }
+  subnet_id = var.subnet_id
 }
 
 # Cosmos DB
@@ -48,8 +46,8 @@ module "stg" {
   storage_account_name = var.storage_account_name
   location             = var.location
   resource_group_name  = var.resource_group_name
-  subnet_id            = var.subnet_id
   key_vault_key_id     = module.kv.key_vault_key_id
+  subnet_id            = var.subnet_id
 }
 
 # Event Hub
@@ -65,12 +63,12 @@ module "eh" {
 # Outputs
 module "uat_outputs" {
   source                      = "../../modules/outputs"
-  keyvault_id                  = module.kv.key_vault_id
-  cosmosdb_name                = module.cosmos.cosmosdb_name
-  acr_name                     = module.acr.acr_name
-  storage_account_name         = module.stg.storage_account_name
-  eventhub_namespace           = module.eh.eventhub_namespace
-  eventhub_name                = module.eh.eventhub_name
-  app_service_name             = module.app_service.app_service_name
-  app_service_default_hostname = module.app_service.default_hostname
+  keyvault_id                  = var.key_vault_name
+  cosmosdb_name                = var.cosmosdb_name
+  acr_name                     = var.acr_name
+  storage_account_name         = var.storage_account_name
+  eventhub_namespace           = var.eventhub_namespace
+  eventhub_name                = var.eventhub_name
+  app_service_name             = var.app_service_name
+  app_service_default_hostname = "${var.app_service_name}.azurewebsites.net"
 }

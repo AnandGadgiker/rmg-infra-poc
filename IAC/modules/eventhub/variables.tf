@@ -1,5 +1,20 @@
-variable "eventhub_namespace" {}
-variable "eventhub_name" {}
-variable "location" {}
-variable "resource_group_name" {}
-variable "subnet_id" {}
+variable "eventhub_namespace" {
+  type = string
+}
+
+variable "eventhub_name" {
+  type = string
+}
+
+variable "location" {
+  type = string
+}
+
+variable "resource_group_name" {
+  type = string
+}
+
+variable "subnet_id" {
+  type    = string
+  default = null
+}
