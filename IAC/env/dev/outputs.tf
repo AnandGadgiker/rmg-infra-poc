@@ -1,1 +1,0 @@
-output "openai_endpoint" { value = module.openai.openai_endpoint }
