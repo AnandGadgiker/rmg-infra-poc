@@ -1,34 +1,39 @@
 variable "keyvault_id" {
+  description = "ID of the Key Vault"
   type        = string
-  description = "The Key Vault resource ID"
-}
-
-variable "keyvault_cmk_id" {
-  type        = string
-  description = "The Customer Managed Key (CMK) ID"
 }
 
 variable "cosmosdb_name" {
+  description = "Name of the CosmosDB account"
   type        = string
-  description = "The Cosmos DB instance name"
 }
 
 variable "acr_name" {
+  description = "Name of the Azure Container Registry"
   type        = string
-  description = "The Azure Container Registry name"
 }
 
 variable "storage_account_name" {
+  description = "Name of the Storage Account"
   type        = string
-  description = "The Storage Account name"
 }
 
 variable "eventhub_namespace" {
+  description = "EventHub namespace"
   type        = string
-  description = "The Event Hub namespace"
 }
 
 variable "eventhub_name" {
+  description = "EventHub name"
   type        = string
-  description = "The Event Hub name"
+}
+
+variable "app_service_name" {
+  description = "Name of the App Service"
+  type        = string
+}
+
+variable "app_service_default_hostname" {
+  description = "Default hostname of the App Service"
+  type        = string
 }

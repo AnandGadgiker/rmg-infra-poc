@@ -1,4 +1,4 @@
-name: Run terraform for resource creation
+name: Run Terraform for resource creation
 
 on:
   workflow_dispatch:
@@ -17,19 +17,14 @@ permissions:
   pull-requests: write
 
 env:
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
   TF_VERSION: 1.5.7
+  WORKDIR: IAC/environments/${{ github.event.inputs.environment }}
+  ENV: ${{ github.event.inputs.environment }}
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
-    env:
-      ENV: ${{ github.event.inputs.environment }}
-      WORKDIR: IAC/environments/${{ github.event.inputs.environment }}
 
     steps:
       - uses: actions/checkout@v4
@@ -49,11 +44,11 @@ jobs:
               "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
-              
+
       - name: Clean Terraform cache
         run: |
-          rm -rf .terraform
-          rm -rf .terraform.lock.hcl
+          rm -rf ${{ env.WORKDIR }}/.terraform
+          rm -f ${{ env.WORKDIR }}/.terraform.lock.hcl
 
       - name: Terraform Init
         run: terraform init
@@ -89,7 +84,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -var-file="terraform.tfvars" -out=tfplan
+        run: terraform plan -var-file="${{ env.WORKDIR }}/${{ env.ENV }}.tfvars" -out=tfplan
         working-directory: ${{ env.WORKDIR }}
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}

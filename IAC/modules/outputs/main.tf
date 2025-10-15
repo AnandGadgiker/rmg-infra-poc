@@ -1,34 +1,45 @@
-output "key_vault_uri" {
+# Key Vault
+output "key_vault_id" {
+  description = "ID of the Azure Key Vault"
   value       = var.keyvault_id
-  description = "The URI of the Key Vault"
 }
 
-output "key_vault_cmk_id" {
-  value       = var.keyvault_cmk_id
-  description = "The Customer Managed Key (CMK) ID"
-}
-
+# CosmosDB
 output "cosmosdb_name" {
+  description = "Name of the CosmosDB account"
   value       = var.cosmosdb_name
-  description = "The name of the Cosmos DB instance"
 }
 
+# Azure Container Registry
 output "acr_name" {
+  description = "Name of the Azure Container Registry"
   value       = var.acr_name
-  description = "The name of the Azure Container Registry"
 }
 
+# Storage Account
 output "storage_account_name" {
+  description = "Name of the Storage Account"
   value       = var.storage_account_name
-  description = "The name of the Storage Account"
 }
 
+# EventHub
 output "eventhub_namespace" {
+  description = "EventHub namespace"
   value       = var.eventhub_namespace
-  description = "The Event Hub namespace"
 }
 
 output "eventhub_name" {
+  description = "EventHub name"
   value       = var.eventhub_name
-  description = "The Event Hub name"
+}
+
+# App Service
+output "app_service_name" {
+  description = "Name of the App Service"
+  value       = var.app_service_name
+}
+
+output "app_service_default_hostname" {
+  description = "Default hostname of the App Service"
+  value       = var.app_service_default_hostname
 }
