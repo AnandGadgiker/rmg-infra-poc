@@ -1,9 +1,16 @@
+
 resource "azurerm_cosmosdb_account" "db" {
   name                = var.cosmosdb_name
   location            = var.location
   resource_group_name = var.resource_group_name
   offer_type          = "Standard"
   kind                = "GlobalDocumentDB"
+
+  enable_automatic_failover = true
+  enable_multiple_write_locations = false
+  is_virtual_network_filter_enabled = true
+  public_network_access_enabled = false
+  local_authentication_disabled = true
 
   consistency_policy {
     consistency_level = "Session"
@@ -13,4 +20,10 @@ resource "azurerm_cosmosdb_account" "db" {
     location          = var.location
     failover_priority = 0
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  key_vault_key_id = var.key_vault_key_id
 }
