@@ -9,9 +9,23 @@ module "keyvault" {
 }
 
 ##############################
-# 2️⃣ App Service
+# 2️⃣ App Service Plan
 ##############################
-# Retrieve AAD secret dynamically from Key Vault
+resource "azurerm_app_service_plan" "asp" {
+  name                = var.app_service_plan_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  kind                = "Linux"
+  reserved            = true
+  sku {
+    tier = "Standard"
+    size = "S1"
+  }
+}
+
+##############################
+# 3️⃣ App Service
+##############################
 data "azurerm_key_vault_secret" "aad_client_secret" {
   name         = "AAD_CLIENT_SECRET"
   key_vault_id = module.keyvault.key_vault_id
@@ -24,7 +38,7 @@ module "app_service" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   subnet_id             = var.subnet_id
-  app_service_plan_id   = var.app_service_plan_id
+  app_service_plan_id   = azurerm_app_service_plan.asp.id
 
   app_settings = {
     ENV               = "dev"
@@ -33,7 +47,7 @@ module "app_service" {
 }
 
 ##############################
-# 3️⃣ Cosmos DB with CMK
+# 4️⃣ Cosmos DB with CMK
 ##############################
 module "cosmosdb" {
   source              = "../../modules/cosmosdb"
@@ -44,7 +58,7 @@ module "cosmosdb" {
 }
 
 ##############################
-# 4️⃣ ACR with CMK
+# 5️⃣ ACR with CMK
 ##############################
 module "acr" {
   source              = "../../modules/acr"
@@ -55,7 +69,7 @@ module "acr" {
 }
 
 ##############################
-# 5️⃣ Storage Account with CMK
+# 6️⃣ Storage Account with CMK
 ##############################
 module "storage_account" {
   source                = "../../modules/storage_account"
@@ -66,7 +80,7 @@ module "storage_account" {
 }
 
 ##############################
-# 6️⃣ Event Hub
+# 7️⃣ Event Hub
 ##############################
 module "eventhub" {
   source              = "../../modules/eventhub"
@@ -78,7 +92,7 @@ module "eventhub" {
 }
 
 ##############################
-# 7️⃣ Outputs Module
+# 8️⃣ Outputs Module
 ##############################
 module "dev_outputs" {
   source = "../../modules/outputs"

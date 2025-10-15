@@ -1,6 +1,4 @@
-##############################
-# 1️⃣ Key Vault Module
-##############################
+# Key Vault Module
 module "keyvault" {
   source              = "../../modules/keyvault"
   key_vault_name      = var.key_vault_name
@@ -8,9 +6,20 @@ module "keyvault" {
   resource_group_name = var.resource_group_name
 }
 
-##############################
-# 2️⃣ App Service
-##############################
+# App Service Plan
+resource "azurerm_app_service_plan" "asp" {
+  name                = var.app_service_plan_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  kind                = "Linux"
+  reserved            = true
+  sku {
+    tier = "Standard"
+    size = "S1"
+  }
+}
+
+# App Service
 data "azurerm_key_vault_secret" "aad_client_secret" {
   name         = "AAD_CLIENT_SECRET"
   key_vault_id = module.keyvault.key_vault_id
@@ -23,7 +32,7 @@ module "app_service" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   subnet_id             = var.subnet_id
-  app_service_plan_id   = var.app_service_plan_id
+  app_service_plan_id   = azurerm_app_service_plan.asp.id
 
   app_settings = {
     ENV               = "uat"
@@ -31,9 +40,7 @@ module "app_service" {
   }
 }
 
-##############################
-# 3️⃣ Cosmos DB with CMK
-##############################
+# Cosmos DB
 module "cosmosdb" {
   source              = "../../modules/cosmosdb"
   cosmosdb_name       = var.cosmosdb_name
@@ -42,9 +49,7 @@ module "cosmosdb" {
   key_vault_key_id    = module.keyvault.key_vault_key_id
 }
 
-##############################
-# 4️⃣ ACR with CMK
-##############################
+# ACR
 module "acr" {
   source              = "../../modules/acr"
   acr_name            = var.acr_name
@@ -53,9 +58,7 @@ module "acr" {
   key_vault_key_id    = module.keyvault.key_vault_key_id
 }
 
-##############################
-# 5️⃣ Storage Account with CMK
-##############################
+# Storage Account
 module "storage_account" {
   source                = "../../modules/storage_account"
   storage_account_name  = var.storage_account_name
@@ -64,9 +67,7 @@ module "storage_account" {
   key_vault_key_id      = module.keyvault.key_vault_key_id
 }
 
-##############################
-# 6️⃣ Event Hub
-##############################
+# Event Hub
 module "eventhub" {
   source              = "../../modules/eventhub"
   eventhub_namespace  = var.eventhub_namespace
@@ -76,9 +77,7 @@ module "eventhub" {
   subnet_id           = var.subnet_id
 }
 
-##############################
-# 7️⃣ Outputs Module
-##############################
+# Outputs
 module "uat_outputs" {
   source = "../../modules/outputs"
 
