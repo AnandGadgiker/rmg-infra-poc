@@ -1,5 +1,6 @@
-output "keyvault_id" {
-  value = var.keyvault_id
+output "key_vault_key_id" {
+  value       = azurerm_key_vault_key.kv_key.id
+  description = "The ID of the Key Vault Key for CMK"
 }
 
 output "cosmosdb_name" {
@@ -29,3 +30,4 @@ output "app_service_name" {
 output "app_service_default_hostname" {
   value = var.app_service_default_hostname
 }
+

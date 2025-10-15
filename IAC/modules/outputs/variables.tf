@@ -29,3 +29,8 @@ variable "app_service_name" {
 variable "app_service_default_hostname" {
   type = string
 }
+
+output "key_vault_key_id" {
+  value       = azurerm_key_vault_key.kv_key.id
+  description = "The ID of the Key Vault Key for CMK"
+}
