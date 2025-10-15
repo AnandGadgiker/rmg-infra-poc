@@ -37,7 +37,7 @@ module "acr" {
   acr_name            = var.acr_name
   location            = var.location
   resource_group_name = var.resource_group_name
- key_vault_name      = var.key_vault_name
+  key_vault_name      = var.key_vault_name
 }
 
 # Storage Account
@@ -46,7 +46,7 @@ module "stg" {
   storage_account_name = var.storage_account_name
   location             = var.location
   resource_group_name  = var.resource_group_name
-  key_vault_key_id     = module.kv.key_vault_key_id
+  key_vault_name      = var.key_vault_name
   subnet_id            = var.subnet_id
 }
 
