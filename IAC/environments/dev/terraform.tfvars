@@ -1,5 +1,5 @@
 location              = "East US"
-resource_group_name   = "dev-rg" # or "uat-rg"
+resource_group_name   = "dev-rg" 
 app_service_plan_name = "dev-app-plan"
 app_service_name      = "dev-app-service"
 app_settings = {
@@ -10,4 +10,4 @@ acr_name              = "devacr"
 storage_account_name  = "devstorageacct"
 eventhub_namespace    = "dev-namespace"
 eventhub_name         = "dev-hub"
-subnet_id             = "/subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/Microsoft.Network/virtualNetworks/<vnet-name>/subnets/subnet2"
+subnet_id             = "/subscriptions/1caa3d80-14f8-4775-b51b-247372d730b0/resourceGroups/rg-aiforce-hub-uksouth-001/providers/Microsoft.Network/virtualNetworks/vnet-aiforce-rmgpoc-uksouth-001/subnets/sbnt-pep-uksouth-001"
