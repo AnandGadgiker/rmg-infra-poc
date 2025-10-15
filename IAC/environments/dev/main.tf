@@ -1,0 +1,37 @@
+module "app_service" {
+  source                = "../../modules/app_service"
+  app_service_plan_name = var.app_service_plan_name
+  app_service_name      = var.app_service_name
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  app_settings          = var.app_settings
+}
+
+module "cosmosdb" {
+  source              = "../../modules/cosmosdb"
+  cosmosdb_name       = var.cosmosdb_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+module "acr" {
+  source              = "../../modules/acr"
+  acr_name            = var.acr_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+module "storage_account" {
+  source                = "../../modules/storage_account"
+  storage_account_name  = var.storage_account_name
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+}
+
+module "eventhub" {
+  source              = "../../modules/eventhub"
+  eventhub_namespace  = var.eventhub_namespace
+  eventhub_name       = var.eventhub_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
