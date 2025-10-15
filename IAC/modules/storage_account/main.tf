@@ -17,9 +17,14 @@ resource "azurerm_storage_account" "storage" {
     type = "SystemAssigned"
   }
 
-  customer_managed_key {
-    key_vault_key_id = var.key_vault_key_id
+  
+dynamic "customer_managed_key" {
+    for_each = var.key_vault_key_id != null ? [1] : []
+    content {
+      key_vault_key_id = var.key_vault_key_id
+    }
   }
+
 
   blob_properties {
     delete_retention_policy {
