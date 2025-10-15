@@ -1,48 +1,52 @@
-resource "azurerm_linux_web_app" "app" {
-  name                = var.app_service_name
+module "keyvault" {
+  source              = "../../modules/keyvault"
+  key_vault_name      = var.key_vault_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  service_plan_id     = var.app_service_plan_id
-  virtual_network_subnet_id = var.subnet_id
+  tenant_id           = var.tenant_id
+  object_id           = var.object_id
+}
 
-  identity {
-    type = "SystemAssigned"
-  }
+module "app_service" {
+  source                = "../../modules/app_service"
+  app_service_plan_name = var.app_service_plan_name
+  app_service_name      = var.app_service_name
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  app_settings          = var.app_settings
+  subnet_id             = var.subnet_id
+  app_service_plan_id   = var.app_service_plan_id
+}
 
-  site_config {
-    scm_type               = "LocalGit"
-    vnet_route_all_enabled = true
-    ftps_state             = "Disabled"
-    http2_enabled          = true
-    websockets_enabled     = true
-    health_check_path      = "/health"
-    app_command_line       = ""
-    default_documents      = ["index.html"]
-  }
+module "cosmosdb" {
+  source              = "../../modules/cosmosdb"
+  cosmosdb_name       = var.cosmosdb_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  key_vault_key_id    = module.keyvault.key_vault_key_id
+}
 
-  app_settings = var.app_settings
+module "acr" {
+  source              = "../../modules/acr"
+  acr_name            = var.acr_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  key_vault_key_id    = module.keyvault.key_vault_key_id
+}
 
-  auth_settings_v2 {
-    auth_enabled                 = true
-    require_authentication       = true
-    unauthenticated_action       = "RedirectToLoginPage"
-    default_provider             = "AzureActiveDirectory"
-    issuer                       = var.auth_issuer_url
-    client_id                    = var.auth_client_id
-    client_secret_setting_name   = "AAD_CLIENT_SECRET"
+module "storage_account" {
+  source                = "../../modules/storage_account"
+  storage_account_name  = var.storage_account_name
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  key_vault_key_id      = module.keyvault.key_vault_key_id
+}
 
-    login {
-      token_store_enabled = true
-    }
-  }
-
-  storage_account {
-    access_key   = var.storage_account_access_key
-    account_name = var.storage_account_name
-    share_name   = var.storage_share_name
-    mount_path   = "/mnt/data"
-    type         = "AzureFiles"
-  }
-
-  tags = local.environment_tags
+module "eventhub" {
+  source              = "../../modules/eventhub"
+  eventhub_namespace  = var.eventhub_namespace
+  eventhub_name       = var.eventhub_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = var.subnet_id
 }

@@ -1,21 +1,16 @@
-IAC/
-├── README.md
-├── modules/
-│   ├── acr/
-│   ├── app_service/
-│   ├── cosmosdb/
-│   ├── eventhub/
-│   └── storage_account/
-├── environments/
-│   ├── dev/
-│   │   ├── backend.tf
-│   │   ├── providers.tf
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   └── terraform.tfvars
-│   └── uat/
-│       ├── backend.tf
-│       ├── providers.tf
-│       ├── main.tf
-│       ├── variables.tf
-│       └── terraform.tfvars
+env/
+├── dev/
+│   ├── main.tf
+│   ├── variables.tf
+│   └── dev.tfvars
+└── uat/
+    ├── main.tf
+    ├── variables.tf
+    └── uat.tfvars
+modules/
+├── keyvault/
+├── acr/
+├── app_service/
+├── cosmosdb/
+├── storage_account/
+└── eventhub/

@@ -1,4 +1,3 @@
-
 variable "location" {
   type = string
 }
@@ -42,7 +41,6 @@ variable "eventhub_name" {
 variable "subnet_id" {
   type = string
 }
-
 
 variable "key_vault_name" {
   description = "Name of the Azure Key Vault"
