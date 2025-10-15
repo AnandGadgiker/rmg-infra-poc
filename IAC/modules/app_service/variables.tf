@@ -34,3 +34,15 @@ variable "storage_share_name" {
   description = "Name of the file share to mount"
   default     = null
 }
+
+variable "auth_client_id" {
+  type        = string
+  description = "Client ID for Azure AD authentication"
+  default     = null
+}
+
+variable "auth_client_secret" {
+  type        = string
+  description = "Client secret for Azure AD authentication"
+  default     = null
+}

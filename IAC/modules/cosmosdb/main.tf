@@ -7,7 +7,7 @@ resource "azurerm_cosmosdb_account" "db" {
   kind                = "GlobalDocumentDB"
 
   automatic_failover_enabled = true
-  enable_multiple_write_locations = false
+  multiple_write_locations_enabled = false
   is_virtual_network_filter_enabled = true
   public_network_access_enabled = false
   local_authentication_disabled = true
