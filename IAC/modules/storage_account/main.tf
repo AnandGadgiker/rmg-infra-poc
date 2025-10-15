@@ -4,17 +4,15 @@ resource "azurerm_storage_account" "storage" {
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
-
-  enable_https_traffic_only     = true
-  allow_blob_public_access      = false
-  min_tls_version               = "TLS1_2"
+  min_tls_version          = "TLS1_2"
+  is_hns_enabled           = true
   public_network_access_enabled = false
-  is_hns_enabled                = true
 
   identity {
     type = "SystemAssigned"
   }
 
+  # Customer Managed Key if provided
   dynamic "customer_managed_key" {
     for_each = var.key_vault_key_id != null ? [1] : []
     content {
@@ -26,6 +24,7 @@ resource "azurerm_storage_account" "storage" {
     delete_retention_policy {
       days = 7
     }
+    public_access = "None"  # disables public blob access
   }
 
   queue_properties {
