@@ -75,9 +75,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} plan \
-          -var-file="${{ github.event.inputs.environment }}.tfvars" \
-          -out=tfplan
+        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} plan -var-file="${{ github.event.inputs.environment }}.tfvars" -out=tfplan
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
