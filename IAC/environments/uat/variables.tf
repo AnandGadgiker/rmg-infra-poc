@@ -1,3 +1,4 @@
+
 variable "location" {
   type = string
 }
@@ -40,4 +41,20 @@ variable "eventhub_name" {
 
 variable "subnet_id" {
   type = string
+}
+
+
+variable "key_vault_name" {
+  description = "Name of the Azure Key Vault"
+  type        = string
+}
+
+variable "tenant_id" {
+  description = "Azure Active Directory tenant ID"
+  type        = string
+}
+
+variable "object_id" {
+  description = "Object ID for access policy"
+  type        = string
 }
