@@ -49,6 +49,11 @@ jobs:
               "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
+              
+      - name: Clean Terraform cache
+        run: |
+          rm -rf .terraform
+          rm -rf .terraform.lock.hcl
 
       - name: Terraform Init
         run: terraform init
