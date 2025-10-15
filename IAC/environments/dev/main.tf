@@ -6,6 +6,7 @@ module "app_service" {
   resource_group_name   = var.resource_group_name
   app_settings          = var.app_settings
   subnet_id             = var.subnet_id
+  app_service_plan_id   = var.app_service_plan_id
 }
 
 module "cosmosdb" {
@@ -13,6 +14,7 @@ module "cosmosdb" {
   cosmosdb_name       = var.cosmosdb_name
   location            = var.location
   resource_group_name = var.resource_group_name
+  key_vault_key_id      = var.key_vault_key_id
 }
 
 module "acr" {
@@ -20,6 +22,7 @@ module "acr" {
   acr_name            = var.acr_name
   location            = var.location
   resource_group_name = var.resource_group_name
+  key_vault_key_id      = var.key_vault_key_id
 }
 
 module "storage_account" {
@@ -27,6 +30,7 @@ module "storage_account" {
   storage_account_name  = var.storage_account_name
   location              = var.location
   resource_group_name   = var.resource_group_name
+  key_vault_key_id      = var.key_vault_key_id
 }
 
 module "eventhub" {
