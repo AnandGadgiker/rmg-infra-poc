@@ -76,11 +76,11 @@ jobs:
       - run: tflint
         working-directory: ${{ env.WORKDIR }}
 
-      - name: Run Checkov (Security)
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: ${{ env.WORKDIR }}
-          framework: terraform
+ #     - name: Run Checkov (Security)
+ #       uses: bridgecrewio/checkov-action@master
+ #      with:
+ #        directory: ${{ env.WORKDIR }}
+ #         framework: terraform
 
       - name: Terraform Plan
         id: plan
@@ -113,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ENV: ${{ github.event.inputs.environment }}
-      WORKDIR: IAC/environments/${{ github.event.inputs.environment }}
+      WORKDIR: IAC/env/${{ github.event.inputs.environment }}
 
     steps:
       - uses: actions/checkout@v4

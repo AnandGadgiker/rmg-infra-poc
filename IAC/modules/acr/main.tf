@@ -7,11 +7,13 @@ resource "azurerm_container_registry" "acr" {
   admin_enabled                 = false
   public_network_access_enabled = false
   data_endpoint_enabled         = true
+  zone_redundancy_enabled       = true
 
   georeplications {
   location                = "East US"
   zone_redundancy_enabled = true
 }
+
 
   identity {
     type = "SystemAssigned"
