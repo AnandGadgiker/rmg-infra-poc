@@ -54,7 +54,3 @@ variable "aad_client_secret_value" {
   type = string
 }
 
-variable "key_vault_key_id" {
-  type    = string
-  default = null  # optional if CMK not used
-}
