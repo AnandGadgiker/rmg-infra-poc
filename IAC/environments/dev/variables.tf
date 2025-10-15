@@ -10,3 +10,6 @@ variable "acr_name" {}
 variable "storage_account_name" {}
 variable "eventhub_namespace" {}
 variable "eventhub_name" {}
+variable "subnet_id" {
+  description = "The ID of the existing subnet to be used for network integration"
+}
