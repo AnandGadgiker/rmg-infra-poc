@@ -26,6 +26,7 @@ resource "azurerm_app_service" "app" {
   app_service_plan_id = azurerm_app_service_plan.plan.id
 
   app_settings = var.app_settings
+  
 }
 
 # Outputs
