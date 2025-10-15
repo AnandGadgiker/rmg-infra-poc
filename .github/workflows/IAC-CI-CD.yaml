@@ -84,7 +84,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -var-file="${{ env.WORKDIR }}/${{ env.ENV }}.tfvars" -out=tfplan
+        run: terraform plan -var-file="${{ env.ENV }}.tfvars" -out=tfplan
         working-directory: ${{ env.WORKDIR }}
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
