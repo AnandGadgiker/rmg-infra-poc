@@ -23,15 +23,13 @@ resource "azurerm_linux_web_app" "app" {
   app_settings = var.app_settings
 
   auth_settings_v2 {
-    auth_enabled           = true
-    require_authentication = true
-    unauthenticated_action = "RedirectToLoginPage"
-
-    active_directory {
-      client_id     = var.auth_client_id
-      client_secret_setting_name = "AAD_CLIENT_SECRET"
-      issuer        = var.auth_issuer_url
-    }
+    auth_enabled                 = true
+    require_authentication       = true
+    unauthenticated_action       = "RedirectToLoginPage"
+    default_provider             = "AzureActiveDirectory"
+    issuer                       = var.auth_issuer_url
+    client_id                    = var.auth_client_id
+    client_secret_setting_name   = "AAD_CLIENT_SECRET"
 
     login {
       token_store_enabled = true
@@ -45,4 +43,6 @@ resource "azurerm_linux_web_app" "app" {
     mount_path   = "/mnt/data"
     type         = "AzureFiles"
   }
+
+  tags = local.environment_tags
 }

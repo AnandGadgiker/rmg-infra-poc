@@ -22,8 +22,4 @@ resource "azurerm_container_registry" "acr" {
     identity_client_id   = azurerm_container_registry.acr.identity[0].principal_id
   }
 
-  retention_policy {
-    days    = 7
-    enabled = true
-  }
 }
