@@ -47,8 +47,8 @@ jobs:
 
       - name: Clean Terraform cache
         run: |
-          rm -rf ${{ env.WORKDIR }}/.terraform
-          rm -f ${{ env.WORKDIR }}/.terraform.lock.hcl
+          rm -rf .terraform
+          rm -rf .terraform.lock.hcl
 
       - name: Terraform Init
         run: terraform init
