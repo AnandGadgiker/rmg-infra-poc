@@ -1,15 +1,43 @@
-variable "location" {}
-variable "resource_group_name" {}
-variable "app_service_plan_name" {}
-variable "app_service_name" {}
+variable "location" {
+  type = string
+}
+
+variable "resource_group_name" {
+  type = string
+}
+
+variable "app_service_plan_name" {
+  type = string
+}
+
+variable "app_service_name" {
+  type = string
+}
+
 variable "app_settings" {
   type = map(string)
 }
-variable "cosmosdb_name" {}
-variable "acr_name" {}
-variable "storage_account_name" {}
-variable "eventhub_namespace" {}
-variable "eventhub_name" {}
+
+variable "cosmosdb_name" {
+  type = string
+}
+
+variable "acr_name" {
+  type = string
+}
+
+variable "storage_account_name" {
+  type = string
+}
+
+variable "eventhub_namespace" {
+  type = string
+}
+
+variable "eventhub_name" {
+  type = string
+}
+
 variable "subnet_id" {
-  description = "The ID of the existing subnet to be used for network integration"
+  type = string
 }
