@@ -1,4 +1,4 @@
-name: Terraform CI/CD for Resource creation
+name: Run terraform for resource creation
 
 on:
   workflow_dispatch:
@@ -25,7 +25,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     env:
       ENV: ${{ github.event.inputs.environment }}
-      WORKDIR: terraform-azure-project/environments/${{ github.event.inputs.environment }}
+      WORKDIR: IAC/environments/${{ github.event.inputs.environment }}
 
     steps:
     - uses: actions/checkout@v4
