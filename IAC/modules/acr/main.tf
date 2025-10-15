@@ -18,7 +18,7 @@ resource "azurerm_container_registry" "acr" {
   }
 
   encryption {
-    key_vault_name               = var.key_vault_name
+    key_vault_key_id   = module.kv.key_vault_key_id
     identity_client_id   = azurerm_container_registry.acr.identity[0].principal_id
   }
 
