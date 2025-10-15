@@ -28,9 +28,3 @@ variable "linux_fx_version" {
   default     = "NODE|18-lts"   # Example default, can be overridden
   description = "Linux FX version (runtime stack) for App Service"
 }
-
-variable "depends_on" {
-  type        = list(any)
-  default     = []
-  description = "Optional dependencies for the App Service"
-}

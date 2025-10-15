@@ -17,6 +17,4 @@ resource "azurerm_app_service" "app" {
   identity {
     type = "SystemAssigned"
   }
-
-  depends_on = [var.depends_on] # optional, if you want explicit dependencies
 }

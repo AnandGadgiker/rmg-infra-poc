@@ -33,21 +33,21 @@ data "azurerm_key_vault_secret" "aad_client_secret" {
 
 module "app_service" {
   source                = "../../modules/app_service"
-  app_service_plan_name = var.app_service_plan_name
   app_service_name      = var.app_service_name
   location              = var.location
   resource_group_name   = var.resource_group_name
-  subnet_id             = var.subnet_id
   app_service_plan_id   = azurerm_app_service_plan.asp.id
 
   app_settings = {
     ENV               = "dev"
     AAD_CLIENT_SECRET = data.azurerm_key_vault_secret.aad_client_secret.value
   }
+
+  depends_on = [module.keyvault] # optional, environment-level dependency
 }
 
 ##############################
-# 4️⃣ Cosmos DB with CMK
+# 4️⃣ Cosmos DB
 ##############################
 module "cosmosdb" {
   source              = "../../modules/cosmosdb"
@@ -58,7 +58,7 @@ module "cosmosdb" {
 }
 
 ##############################
-# 5️⃣ ACR with CMK
+# 5️⃣ ACR
 ##############################
 module "acr" {
   source              = "../../modules/acr"
@@ -69,7 +69,7 @@ module "acr" {
 }
 
 ##############################
-# 6️⃣ Storage Account with CMK
+# 6️⃣ Storage Account
 ##############################
 module "storage_account" {
   source                = "../../modules/storage_account"
@@ -92,7 +92,7 @@ module "eventhub" {
 }
 
 ##############################
-# 8️⃣ Outputs Module
+# 8️⃣ Outputs
 ##############################
 module "dev_outputs" {
   source = "../../modules/outputs"
