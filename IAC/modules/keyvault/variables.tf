@@ -1,14 +1,5 @@
-variable "key_vault_name" {
-  description = "Name of the Azure Key Vault"
-  type        = string
-}
-
-variable "location" {
-  description = "Azure region"
-  type        = string
-}
-
-variable "resource_group_name" {
-  description = "Resource Group name"
-  type        = string
-}
+variable "key_vault_name" { type = string }
+variable "location" { type = string }
+variable "resource_group_name" { type = string }
+variable "tenant_id" { type = string }
+variable "aad_client_secret_value" { type = string }

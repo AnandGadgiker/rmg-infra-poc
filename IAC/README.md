@@ -26,14 +26,10 @@ IAC/
 │       └── variables.tf
 ├── environments/
 │   ├── dev/
-│   │   ├── backend.tf
-│   │   ├── providers.tf
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── dev.tfvars
 │   └── uat/
-│       ├── backend.tf
-│       ├── providers.tf
 │       ├── main.tf
 │       ├── variables.tf
 │       └── uat.tfvars

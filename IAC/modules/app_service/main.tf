@@ -1,20 +1,21 @@
-##############################
-# App Service Resource
-##############################
-resource "azurerm_app_service" "app" {
-  name                = var.app_service_name
+module "keyvault" {
+  source              = "../../modules/keyvault"
+  key_vault_name      = var.key_vault_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  app_service_plan_id = var.app_service_plan_id
-  kind                = "Linux"
+  tenant_id           = var.tenant_id
+  aad_client_secret_value = var.aad_client_secret_value
+}
 
-  site_config {
-    linux_fx_version = var.linux_fx_version
+module "app_service" {
+  source                = "../../modules/app_service"
+  app_service_plan_name = var.app_service_plan_name
+  app_service_name      = var.app_service_name
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  app_settings          = {
+    ENV               = var.env
+    AAD_CLIENT_SECRET = module.keyvault.aad_client_secret_name
   }
-
-  app_settings = var.app_settings
-
-  identity {
-    type = "SystemAssigned"
-  }
+  subnet_id             = var.subnet_id
 }
