@@ -10,7 +10,7 @@ variable "resource_group_name" {
   type = string
 }
 
-variable "key_vault_key_id" {
+variable "key_vault_name" {
   type    = string
   default = null
 }
