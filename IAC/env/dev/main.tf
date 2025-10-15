@@ -69,4 +69,5 @@ module "dev_outputs" {
   eventhub_namespace    = module.eh.eventhub_namespace
   eventhub_name         = module.eh.eventhub_name
   app_service_name      = module.app_service.app_service_name
+  app_service_default_hostname = module.app_svc.default_hostname
 }
