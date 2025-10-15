@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ENV: ${{ github.event.inputs.environment }}
-      WORKDIR: terraform-azure-project/environments/${{ github.event.inputs.environment }}
+      WORKDIR: IAC/environments/${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v4
 
