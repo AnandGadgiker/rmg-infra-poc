@@ -1,21 +1,22 @@
-module "kv" {
-  source = "../../modules/keyvault"
-  key_vault_name = var.key_vault_name
-  location = var.location
+resource "azurerm_app_service_plan" "plan" {
+  name                = var.app_service_plan_name
+  location            = var.location
   resource_group_name = var.resource_group_name
-  tenant_id = var.tenant_id
-  aad_client_secret_value = var.aad_client_secret_value
+  sku {
+    tier = "Standard"
+    size = "S1"
+  }
 }
 
-module "app_svc" {
-  source = "../../modules/app_service"
-  app_service_plan_name = var.app_service_plan_name
-  app_service_name = var.app_service_name
-  location = var.location
+resource "azurerm_app_service" "app" {
+  name                = var.app_service_name
+  location            = var.location
   resource_group_name = var.resource_group_name
-  app_settings = {
-    ENV = var.env
-    AAD_CLIENT_SECRET = module.kv.aad_client_secret_name
+  app_service_plan_id = azurerm_app_service_plan.plan.id
+
+  app_settings = var.app_settings
+
+  identity {
+    type = "SystemAssigned"
   }
-  subnet_id = var.subnet_id
 }
