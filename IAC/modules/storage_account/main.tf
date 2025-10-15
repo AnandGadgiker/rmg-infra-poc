@@ -8,23 +8,10 @@ resource "azurerm_storage_account" "storage" {
   is_hns_enabled           = true
   public_network_access_enabled = false
 
-  identity {
-    type = "SystemAssigned"
-  }
-
-  # Customer Managed Key if provided
-  dynamic "customer_managed_key" {
-    for_each = var.key_vault_key_id != null ? [1] : []
-    content {
-      key_vault_key_id = var.key_vault_key_id
-    }
-  }
-
   blob_properties {
     delete_retention_policy {
       days = 7
     }
-    public_access = "None"  # disables public blob access
   }
 
   queue_properties {

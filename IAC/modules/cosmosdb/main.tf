@@ -25,5 +25,5 @@ resource "azurerm_cosmosdb_account" "db" {
     type = "SystemAssigned"
   }
 
-  key_vault_key_id = var.key_vault_key_id
+  key_vault_name         = var.key_vault_name
 }

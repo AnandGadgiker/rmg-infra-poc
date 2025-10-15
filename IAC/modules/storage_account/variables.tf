@@ -20,3 +20,8 @@ variable "key_vault_name" {
   default = null
 }
 
+variable "user_assigned_identity_id" {
+  type    = string
+  default = null
+}
+

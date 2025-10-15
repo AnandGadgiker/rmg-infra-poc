@@ -38,3 +38,14 @@ variable "app_settings" {
   type    = map(string)
   default = {}
 }
+
+variable "storage_account_name" {
+  type    = string
+  default = null
+}
+
+variable "key_vault_name" {
+  type    = string
+  default = null
+}
+
