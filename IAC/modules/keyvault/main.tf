@@ -32,8 +32,3 @@ output "key_vault_key_id" {
 output "aad_client_secret_name" {
   value = azurerm_key_vault_secret.aad_client_secret.name
 }
-
-output "key_vault_key_id" {
-  value       = azurerm_key_vault_key.cmk.id
-  description = "The ID of the Key Vault Key for customer-managed keys"
-}
