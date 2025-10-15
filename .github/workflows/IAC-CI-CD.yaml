@@ -71,7 +71,7 @@ jobs:
           tflint_version: v0.55.0
 
       - name: Execute TFLint
-        run: terraform -chdir=IAC fmt -recursive
+        run: terraform -chdir=IAC fmt -check
           
       - name: Terraform Plan
         id: plan
