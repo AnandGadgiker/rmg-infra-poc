@@ -25,8 +25,8 @@ resource "azurerm_key_vault_key" "cmk" {
 }
 
 # Outputs
-output "key_vault_id" {
-  value = azurerm_key_vault.kv.id
+output "key_vault_key_id" {
+  value = azurerm_key_vault_key.cmk.id
 }
 
 output "aad_client_secret_name" {
