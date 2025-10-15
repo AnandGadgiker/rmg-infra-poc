@@ -50,7 +50,7 @@ jobs:
           rm -rf IAC/env/${{ github.event.inputs.environment }}/.terraform.lock.hcl
 
       - name: Terraform Init
-        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} init
+        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} init -reconfigure
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -75,7 +75,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform -chdir=IAC plan -var-file="env/${{ github.event.inputs.environment }}/${{ github.event.inputs.environment }}.tfvars" -out=tfplan
+        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} plan -var-file="${{ github.event.inputs.environment }}.tfvars" -out=tfplan
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -86,7 +86,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan-${{ github.event.inputs.environment }}
-          path: IAC/tfplan
+          path: IAC/env/${{ github.event.inputs.environment }}/tfplan
 
   approval:
     needs: terraform
@@ -127,10 +127,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-plan-${{ env.ENV }}
-          path: IAC
+          path: IAC/env/${{ env.ENV }}
 
       - name: Terraform Init
-        run: terraform -chdir=IAC/env/${{ env.ENV }} init
+        run: terraform -chdir=IAC/env/${{ env.ENV }} init -reconfigure
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -138,7 +138,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Apply
-        run: terraform -chdir=IAC apply -auto-approve tfplan
+        run: terraform -chdir=IAC/env/${{ env.ENV }} apply -auto-approve tfplan
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
