@@ -15,13 +15,13 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  
+
 env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }} 
-  TF_VERSION: 1.5.7 
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  TF_VERSION: 1.5.7
 
 jobs:
   terraform:
@@ -32,60 +32,71 @@ jobs:
       WORKDIR: IAC/environments/${{ github.event.inputs.environment }}
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: ${{ env.TF_VERSION }}
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
 
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        creds: |
-          {
-            "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
-            "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
-            "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
-            "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
-          }
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
+            }
 
-    - name: Terraform Init
-      run: terraform init
-      working-directory: ${{ env.WORKDIR }}
-      env:
-        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }
-        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ env.WORKDIR }}
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-    - name: Terraform Validate
-      run: terraform validate
-      working-directory: ${{ env.WORKDIR }}
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ${{ env.WORKDIR }}
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-    - name: Run TFLint
-      uses: terraform-linters/setup-tflint@v3
-      with:
-        tflint_version: v0.55.0
-    - run: tflint
-      working-directory: ${{ env.WORKDIR }}
+      - name: Run TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: v0.55.0
 
-    - name: Run Checkov (Security)
-      uses: bridgecrewio/checkov-action@master
-      with:
-        directory: ${{ env.WORKDIR }}
-        framework: terraform
+      - run: tflint
+        working-directory: ${{ env.WORKDIR }}
 
-    - name: Terraform Plan
-      id: plan
-      run: terraform plan -var-file="terraform.tfvars" -out=tfplan
-      working-directory: ${{ env.WORKDIR }}
+      - name: Run Checkov (Security)
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ env.WORKDIR }}
+          framework: terraform
 
-    - name: Upload Plan File (for apply)
-      uses: actions/upload-artifact@v4
-      with:
-        name: terraform-plan-${{ env.ENV }}
-        path: ${{ env.WORKDIR }}/tfplan
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -var-file="terraform.tfvars" -out=tfplan
+        working-directory: ${{ env.WORKDIR }}
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Upload Plan File (for apply)
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan-${{ env.ENV }}
+          path: ${{ env.WORKDIR }}/tfplan
 
   approval:
     needs: terraform
@@ -103,6 +114,7 @@ jobs:
     env:
       ENV: ${{ github.event.inputs.environment }}
       WORKDIR: IAC/environments/${{ github.event.inputs.environment }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -131,7 +143,17 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: ${{ env.WORKDIR }}
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
         working-directory: ${{ env.WORKDIR }}
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
