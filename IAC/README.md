@@ -3,35 +3,41 @@ IAC/
 ├── modules/
 │   ├── acr/
 │   │   ├── main.tf
-│   │   └── variables.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
 │   ├── app_service/
 │   │   ├── main.tf
-│   │   └── variables.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
 │   ├── cosmosdb/
 │   │   ├── main.tf
-│   │   └── variables.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
 │   ├── eventhub/
 │   │   ├── main.tf
-│   │   └── variables.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
 │   ├── keyvault/
 │   │   ├── main.tf
-│   │   └── variables.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
 │   ├── outputs/
 │   │   ├── main.tf
 │   │   └── variables.tf
 │   └── storage_account/
 │       ├── main.tf
-│       └── variables.tf
+│       ├── variables.tf
+│       └── outputs.tf
 ├── environments/
 │   ├── dev/
 │   │   ├── backend.tf
 │   │   ├── providers.tf
-│   │   ├── main.tf           # includes keyvault, app service plan, app service, cosmosdb, acr, storage, eventhub, outputs
+│   │   ├── main.tf
 │   │   ├── variables.tf
-│   │   └── terraform.tfvars  # fully automated, no app_service_plan_id
+│   │   └── dev.tfvars
 │   └── uat/
 │       ├── backend.tf
 │       ├── providers.tf
-│       ├── main.tf           # same as dev but ENV = "uat"
+│       ├── main.tf
 │       ├── variables.tf
-│       └── terraform.tfvars  # fully automated, no app_service_plan_id
+│       └── uat.tfvars
