@@ -23,6 +23,8 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
+    env:
+      TF_WORKDIR: IAC/env/${{ github.event.inputs.environment }}
 
     steps:
       - name: Checkout repo
@@ -46,11 +48,11 @@ jobs:
 
       - name: Clean Terraform cache
         run: |
-          rm -rf IAC/env/${{ github.event.inputs.environment }}/.terraform
-          rm -rf IAC/env/${{ github.event.inputs.environment }}/.terraform.lock.hcl
+          rm -rf ${{ env.TF_WORKDIR }}/.terraform
+          rm -rf ${{ env.TF_WORKDIR }}/.terraform.lock.hcl
 
       - name: Terraform Init
-        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} init -reconfigure
+        run: terraform -chdir=${{ env.TF_WORKDIR }} init -reconfigure
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -58,7 +60,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Validate
-        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} validate
+        run: terraform -chdir=${{ env.TF_WORKDIR }} validate
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -71,11 +73,11 @@ jobs:
           tflint_version: v0.55.0
 
       - name: Execute Terraform fmt
-        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} fmt -check
+        run: terraform -chdir=${{ env.TF_WORKDIR }} fmt -check
 
       - name: Terraform Plan
         id: plan
-        run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} plan -var-file="${{ github.event.inputs.environment }}.tfvars" -out=tfplan
+        run: terraform -chdir=${{ env.TF_WORKDIR }} plan -var-file="${{ github.event.inputs.environment }}.tfvars" -out=tfplan
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -86,7 +88,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan-${{ github.event.inputs.environment }}
-          path: IAC/env/${{ github.event.inputs.environment }}/tfplan
+          path: ${{ env.TF_WORKDIR }}/tfplan
 
   approval:
     needs: terraform
@@ -103,6 +105,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ENV: ${{ github.event.inputs.environment }}
+      TF_WORKDIR: IAC/env/${{ github.event.inputs.environment }}
 
     steps:
       - uses: actions/checkout@v4
@@ -127,10 +130,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-plan-${{ env.ENV }}
-          path: IAC/env/${{ env.ENV }}
+          path: ${{ env.TF_WORKDIR }}
 
       - name: Terraform Init
-        run: terraform -chdir=IAC/env/${{ env.ENV }} init -reconfigure
+        run: terraform -chdir=${{ env.TF_WORKDIR }} init -reconfigure
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -138,7 +141,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Apply
-        run: terraform -chdir=IAC/env/${{ env.ENV }} apply -auto-approve tfplan
+        run: terraform -chdir=${{ env.TF_WORKDIR }} apply -auto-approve tfplan
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
