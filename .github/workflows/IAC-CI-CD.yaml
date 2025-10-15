@@ -46,12 +46,11 @@ jobs:
 
       - name: Clean Terraform cache
         run: |
-          rm -rf .terraform
-          rm -rf .terraform.lock.hcl
+          rm -rf IAC/.terraform
+          rm -rf IAC/.terraform.lock.hcl
 
       - name: Terraform Init
-        run: terraform init
-        working-directory: IAC
+        run: terraform -chdir=IAC init
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -59,8 +58,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Validate
-        run: terraform validate
-        working-directory: IAC
+        run: terraform -chdir=IAC validate
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -73,15 +71,13 @@ jobs:
           tflint_version: v0.55.0
 
       - name: Execute TFLint
-        run: tflint
-        working-directory: IAC
-
+        run: terraform -chdir=IAC fmt -check
+          
       - name: Terraform Plan
         id: plan
-        run: terraform plan \
+        run: terraform -chdir=IAC plan \
           -var-file="env/${{ github.event.inputs.environment }}/${{ github.event.inputs.environment }}.tfvars" \
           -out=tfplan
-        working-directory: IAC
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -136,8 +132,7 @@ jobs:
           path: IAC
 
       - name: Terraform Init
-        run: terraform init
-        working-directory: IAC
+        run: terraform -chdir=IAC init
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -145,8 +140,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-        working-directory: IAC
+        run: terraform -chdir=IAC apply -auto-approve tfplan
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
