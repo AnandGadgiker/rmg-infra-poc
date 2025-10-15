@@ -1,6 +1,4 @@
-terraform-azure-project/
-├── backend.tf
-├── providers.tf
+IAC/
 ├── README.md
 ├── modules/
 │   ├── acr/
@@ -10,10 +8,14 @@ terraform-azure-project/
 │   └── storage_account/
 ├── environments/
 │   ├── dev/
+│   │   ├── backend.tf
+│   │   ├── providers.tf
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── terraform.tfvars
 │   └── uat/
+│       ├── backend.tf
+│       ├── providers.tf
 │       ├── main.tf
 │       ├── variables.tf
 │       └── terraform.tfvars
