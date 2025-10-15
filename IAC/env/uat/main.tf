@@ -46,7 +46,7 @@ module "stg" {
   storage_account_name = var.storage_account_name
   location             = var.location
   resource_group_name  = var.resource_group_name
-  key_vault_key_id     = module.kv.key_vault_key_id
+  key_vault_name       = var.key_vault_name
   subnet_id            = var.subnet_id
 }
 
@@ -63,7 +63,7 @@ module "eh" {
 # Outputs
 module "uat_outputs" {
   source                      = "../../modules/outputs"
-  keyvault_id                  = var.key_vault_name
+  key_vault_name               = var.key_vault_name
   cosmosdb_name                = var.cosmosdb_name
   acr_name                     = var.acr_name
   storage_account_name         = var.storage_account_name
