@@ -64,6 +64,7 @@ module "eh" {
 module "dev_outputs" {
   source                      = "../../modules/outputs"
   key_vault_name               = var.key_vault_name
+  key_vault_key_id               = module.kv.key_vault_key_id
   cosmosdb_name                = var.cosmosdb_name
   acr_name                     = var.acr_name
   storage_account_name         = var.storage_account_name

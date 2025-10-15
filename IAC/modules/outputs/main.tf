@@ -27,3 +27,7 @@ output "app_service_default_hostname" {
   value = var.app_service_default_hostname
 }
 
+variable "key_vault_key_id" {
+  type = string
+}
+
