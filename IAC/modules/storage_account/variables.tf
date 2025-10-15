@@ -24,7 +24,3 @@ variable "user_assigned_identity_id" {
   type    = string
   default = null
 }
-
-variable "key_vault_key_id" {
-  type = string
-}
