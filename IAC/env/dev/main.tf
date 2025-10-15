@@ -28,7 +28,7 @@ module "cosmos" {
   cosmosdb_name       = var.cosmosdb_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  key_vault_key_id    = module.kv.key_vault_key_id
+  key_vault_name      = var.key_vault_name
 }
 
 # Azure Container Registry
@@ -37,7 +37,7 @@ module "acr" {
   acr_name            = var.acr_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  key_vault_key_id    = module.kv.key_vault_key_id
+ key_vault_name      = var.key_vault_name
 }
 
 # Storage Account

@@ -1,4 +1,4 @@
-variable "keyvault_id" {
+variable "key_vault_name" {
   type = string
 }
 

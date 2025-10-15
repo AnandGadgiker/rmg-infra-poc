@@ -15,7 +15,8 @@ variable "subnet_id" {
   default = null
 }
 
-variable "key_vault_key_id" {
+variable "key_vault_name" {
   type    = string
   default = null
 }
+
