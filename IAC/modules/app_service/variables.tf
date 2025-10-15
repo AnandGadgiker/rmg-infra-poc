@@ -10,3 +10,27 @@ variable "app_service_plan_id" {
   type        = string
   description = "ID of the App Service Plan"
 }
+
+variable "auth_issuer_url" {
+  type        = string
+  description = "Issuer URL for App Service authentication"
+  default     = null
+}
+
+variable "storage_account_name" {
+  type        = string
+  description = "Storage account name for mounting"
+  default     = null
+}
+
+variable "storage_account_access_key" {
+  type        = string
+  description = "Access key for the storage account"
+  default     = null
+}
+
+variable "storage_share_name" {
+  type        = string
+  description = "Name of the file share to mount"
+  default     = null
+}
