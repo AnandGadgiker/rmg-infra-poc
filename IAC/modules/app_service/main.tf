@@ -1,21 +1,21 @@
-module "keyvault" {
-  source              = "../../modules/keyvault"
-  key_vault_name      = var.key_vault_name
-  location            = var.location
+module "kv" {
+  source = "../../modules/keyvault"
+  key_vault_name = var.key_vault_name
+  location = var.location
   resource_group_name = var.resource_group_name
-  tenant_id           = var.tenant_id
+  tenant_id = var.tenant_id
   aad_client_secret_value = var.aad_client_secret_value
 }
 
-module "app_service" {
-  source                = "../../modules/app_service"
+module "app_svc" {
+  source = "../../modules/app_service"
   app_service_plan_name = var.app_service_plan_name
-  app_service_name      = var.app_service_name
-  location              = var.location
-  resource_group_name   = var.resource_group_name
-  app_settings          = {
-    ENV               = var.env
-    AAD_CLIENT_SECRET = module.keyvault.aad_client_secret_name
+  app_service_name = var.app_service_name
+  location = var.location
+  resource_group_name = var.resource_group_name
+  app_settings = {
+    ENV = var.env
+    AAD_CLIENT_SECRET = module.kv.aad_client_secret_name
   }
-  subnet_id             = var.subnet_id
+  subnet_id = var.subnet_id
 }
