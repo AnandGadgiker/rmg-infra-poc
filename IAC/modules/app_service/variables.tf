@@ -21,7 +21,7 @@ variable "subnet_id" {
 
 variable "kind" {
   type    = string
-  default = "Linux"  # "Linux" or "App"
+  default = "Linux" # "Linux" or "App"
 }
 
 variable "sku_tier" {

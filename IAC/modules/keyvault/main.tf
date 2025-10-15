@@ -17,11 +17,11 @@ resource "azurerm_key_vault_secret" "aad_client_secret" {
 
 # Customer Managed Key (CMK) for other resources
 resource "azurerm_key_vault_key" "cmk" {
-  name         = "cmk-key"                # Give a meaningful name
+  name         = "cmk-key" # Give a meaningful name
   key_vault_id = azurerm_key_vault.kv.id
   key_type     = "RSA"
   key_size     = 2048
-  key_opts     = ["encrypt", "decrypt"]   # mandatory
+  key_opts     = ["encrypt", "decrypt"] # mandatory
 }
 
 # Outputs

@@ -6,11 +6,11 @@ resource "azurerm_cosmosdb_account" "db" {
   offer_type          = "Standard"
   kind                = "GlobalDocumentDB"
 
-  automatic_failover_enabled = true
-  multiple_write_locations_enabled = false
+  automatic_failover_enabled        = true
+  multiple_write_locations_enabled  = false
   is_virtual_network_filter_enabled = true
-  public_network_access_enabled = false
-  local_authentication_disabled = true
+  public_network_access_enabled     = false
+  local_authentication_disabled     = true
 
   consistency_policy {
     consistency_level = "Session"
@@ -25,5 +25,5 @@ resource "azurerm_cosmosdb_account" "db" {
     type = "SystemAssigned"
   }
 
-  key_vault_key_id         = var.key_vault_key_id
+  key_vault_key_id = var.key_vault_key_id
 }

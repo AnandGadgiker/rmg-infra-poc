@@ -10,9 +10,9 @@ resource "azurerm_container_registry" "acr" {
   zone_redundancy_enabled       = true
 
   georeplications {
-  location                = "East US"
-  zone_redundancy_enabled = true
-}
+    location                = "East US"
+    zone_redundancy_enabled = true
+  }
 
 
   identity {
@@ -21,7 +21,7 @@ resource "azurerm_container_registry" "acr" {
 
   encryption {
     key_vault_key_id   = var.key_vault_key_id
-    identity_client_id   = azurerm_container_registry.acr.identity[0].principal_id
+    identity_client_id = azurerm_container_registry.acr.identity[0].principal_id
   }
 
 }

@@ -17,5 +17,5 @@ variable "key_vault_name" {
 
 variable "key_vault_key_id" {
   type    = string
-  default = null  # optional if CMK not used
+  default = null # optional if CMK not used
 }
