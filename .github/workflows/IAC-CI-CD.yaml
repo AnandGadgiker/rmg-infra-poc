@@ -70,7 +70,7 @@ jobs:
         with:
           tflint_version: v0.55.0
 
-      - name: Execute TFLint
+      - name: Execute Terraform fmt
         run: terraform -chdir=IAC/env/${{ github.event.inputs.environment }} fmt -check
 
       - name: Terraform Plan
