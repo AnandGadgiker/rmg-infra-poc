@@ -1,9 +1,3 @@
-variable "eventhub_namespace" {}
-variable "eventhub_name" {}
-variable "location" {}
-variable "resource_group_name" {}
-variable "subnet_id" {}
-
 resource "azurerm_eventhub_namespace" "namespace" {
   name                = var.eventhub_namespace
   location            = var.location

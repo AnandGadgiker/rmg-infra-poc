@@ -1,12 +1,3 @@
-variable "app_service_plan_name" {}
-variable "app_service_name" {}
-variable "location" {}
-variable "resource_group_name" {}
-variable "app_settings" {
-  type = map(string)
-}
-variable "subnet_id" {}
-
 resource "azurerm_app_service_plan" "plan" {
   name                = var.app_service_plan_name
   location            = var.location

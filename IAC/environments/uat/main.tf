@@ -5,6 +5,7 @@ module "app_service" {
   location              = var.location
   resource_group_name   = var.resource_group_name
   app_settings          = var.app_settings
+  subnet_id             = var.subnet_id
 }
 
 module "cosmosdb" {
@@ -34,4 +35,5 @@ module "eventhub" {
   eventhub_name       = var.eventhub_name
   location            = var.location
   resource_group_name = var.resource_group_name
+  subnet_id           = var.subnet_id
 }
