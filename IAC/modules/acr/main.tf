@@ -8,10 +8,10 @@ resource "azurerm_container_registry" "acr" {
   public_network_access_enabled = false
   data_endpoint_enabled         = true
 
-  georeplication_locations = [
-    "East US",
-    "West Europe"
-  ]
+  georeplications {
+  location                = "East US"
+  zone_redundancy_enabled = true
+}
 
   identity {
     type = "SystemAssigned"
@@ -23,7 +23,7 @@ resource "azurerm_container_registry" "acr" {
   }
 
   retention_policy {
+    days    = 7
     enabled = true
-    days    = 30
   }
 }
