@@ -39,3 +39,14 @@ variable "tags" {
 variable "env" {
   type = string
 }
+
+variable "terraform_sp_object_id" {
+  type        = string
+  description = "Object ID of the SP or Managed Identity running Terraform"
+}
+
+variable "provider_object_id" {
+  description = "Object ID of the identity used by the Terraform Azure Provider (used for reading existing secrets/keys)"
+  type        = string
+  default     = null
+}

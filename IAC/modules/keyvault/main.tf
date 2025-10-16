@@ -31,7 +31,8 @@ resource "null_resource" "wait_for_policy" {
   }
 
   depends_on = [
-    azurerm_key_vault_access_policy.terraform_sp
+    azurerm_key_vault_access_policy.terraform_sp,
+    azurerm_key_vault_access_policy.provider_identity
   ]
 }
 
