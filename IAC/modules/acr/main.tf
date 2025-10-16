@@ -8,11 +8,6 @@ resource "azurerm_container_registry" "acr" {
   data_endpoint_enabled         = true
   zone_redundancy_enabled       = true
 
-  georeplications {
-    location                = "East US"
-    zone_redundancy_enabled = true
-  }
-
   # Assign a system identity for this ACR
   identity {
     type = "SystemAssigned"
