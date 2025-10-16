@@ -49,23 +49,18 @@ jobs:
       - name: Clean Terraform cache
         run: |
           rm -rf ${{ env.TF_WORKDIR }}/.terraform
-          rm -rf ${{ env.TF_WORKDIR }}/.terraform.lock.hcl
+          rm -f ${{ env.TF_WORKDIR }}/.terraform.lock.hcl
 
       - name: Terraform Init
         run: terraform -chdir=${{ env.TF_WORKDIR }} init -reconfigure
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Validate
         run: terraform -chdir=${{ env.TF_WORKDIR }} validate
-        env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Run TFLint
         uses: terraform-linters/setup-tflint@v3
@@ -79,10 +74,10 @@ jobs:
         id: plan
         run: terraform -chdir=${{ env.TF_WORKDIR }} plan -var-file="${{ github.event.inputs.environment }}.tfvars" -out=tfplan
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
@@ -135,51 +130,40 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=${{ env.TF_WORKDIR }} init -reconfigure
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-
-  #    - name: Terraform Apply
-  #     run: terraform -chdir=${{ env.TF_WORKDIR }} apply -auto-approve tfplan
-   #     env:
-    #      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      #    ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      #    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        #  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-
-      - name: Terraform Init
-        run: terraform -chdir=${{ env.TF_WORKDIR }} init
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Apply - Stage 1 (Key Vault + Access Policies)
         run: |
           terraform -chdir=${{ env.TF_WORKDIR }} apply \
-          -target=module.kv.azurerm_key_vault.kv \
-          -target=module.kv.azurerm_key_vault_access_policy.terraform_sp \
-          -target=module.kv.azurerm_key_vault_access_policy.provider_identity \
-          -var-file="dev.tfvars" \
-          -auto-approve
+            -target=module.kv.azurerm_key_vault.kv \
+            -target=module.kv.azurerm_key_vault_access_policy.terraform_sp \
+            -target=module.kv.azurerm_key_vault_access_policy.provider_identity \
+            -var-file="${{ env.ENV }}.tfvars" \
+            -auto-approve
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Wait for Key Vault access policy propagation
         run: sleep 30
 
       - name: Terraform Plan - Stage 2 (Full Plan)
-        run: terraform -chdir=${{ env.TF_WORKDIR }} plan -var-file="dev.tfvars" -out=tfplan
+        run: terraform -chdir=${{ env.TF_WORKDIR }} plan -var-file="${{ env.ENV }}.tfvars" -out=tfplan
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Apply - Stage 2 (Full Apply)
         run: terraform -chdir=${{ env.TF_WORKDIR }} apply -auto-approve tfplan
         env:
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}  
+          TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
