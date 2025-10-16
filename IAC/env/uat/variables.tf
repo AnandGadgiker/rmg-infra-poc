@@ -42,6 +42,10 @@ variable "subnet_id" {
   type = string
 }
 
+variable "tenant_id" {
+  type = string
+}
+
 variable "key_vault_name" {
   type = string
 }
@@ -55,18 +59,3 @@ variable "terraform_sp_object_id" {
   description = "Object ID of the Service Principal running Terraform"
 }
 
-variable "client_id" {
-  type = string
-}
-
-variable "client_secret" {
-  type = string
-}
-
-variable "tenant_id" {
-  type = string
-}
-
-variable "subscription_id" {
-  type = string
-}
