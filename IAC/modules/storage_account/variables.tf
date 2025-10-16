@@ -29,3 +29,9 @@ variable "key_vault_key_id" {
   type    = string
   default = null
 }
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags to assign to the Storage Account"
+}

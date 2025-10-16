@@ -8,6 +8,8 @@ resource "azurerm_storage_account" "storage" {
   is_hns_enabled                = true
   public_network_access_enabled = false
 
+  tags = var.tags
+
   blob_properties {
     delete_retention_policy {
       days = 7
