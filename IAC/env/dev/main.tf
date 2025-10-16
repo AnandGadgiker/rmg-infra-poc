@@ -53,6 +53,7 @@ module "acr" {
   location            = var.location
   resource_group_name = var.resource_group_name
   key_vault_key_id    = module.kv.key_vault_key_id
+  geo_replication_location = null  # optional, omit or null
 }
 
 # Storage Account

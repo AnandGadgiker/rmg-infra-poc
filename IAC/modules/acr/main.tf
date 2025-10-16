@@ -8,20 +8,25 @@ resource "azurerm_container_registry" "acr" {
   data_endpoint_enabled         = true
   zone_redundancy_enabled       = true
 
-  # Assign a system identity for this ACR
+  # Only add georeplication if it's explicitly set and different from primary location
+  dynamic "georeplications" {
+    for_each = var.geo_replication_location != null && var.geo_replication_location != var.location ? [1] : []
+    content {
+      location                = var.geo_replication_location
+      zone_redundancy_enabled = true
+    }
+  }
+
   identity {
     type = "SystemAssigned"
   }
 
-  # Enable encryption using customer-managed key
   encryption {
-    key_vault_key_id = var.key_vault_key_id
-    # 👇 Use the same identity assigned above for encryption.
+    key_vault_key_id   = var.key_vault_key_id
     identity_client_id = null
   }
 }
 
-# Output principal ID (so other modules can reference it safely)
 output "principal_id" {
   value = azurerm_container_registry.acr.identity[0].principal_id
 }

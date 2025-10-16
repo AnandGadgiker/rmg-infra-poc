@@ -21,6 +21,7 @@ module "kv" {
   resource_group_name     = var.resource_group_name
   tenant_id               = var.tenant_id
   aad_client_secret_value = var.aad_client_secret_value
+  geo_replication_location = null  # optional, omit or null
 }
 
 # App Service Plan + App Service
