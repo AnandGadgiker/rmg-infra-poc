@@ -82,6 +82,7 @@ module "stg" {
   resource_group_name  = azurerm_resource_group.rg.name
   subnet_id            = var.subnet_id
   env                  = var.env
+  terraform_sp_object_id = var.terraform_sp_object_id 
   tags = merge(
     var.tags,
     {

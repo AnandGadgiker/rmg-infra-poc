@@ -76,6 +76,7 @@ module "stg" {
   resource_group_name  = azurerm_resource_group.rg.name
   key_vault_key_id     = module.kv.key_vault_key_id
   subnet_id            = var.subnet_id
+  terraform_sp_object_id = var.terraform_sp_object_id
 }
 
 # 7️⃣ Event Hub
