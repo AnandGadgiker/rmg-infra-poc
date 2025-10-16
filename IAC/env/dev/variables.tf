@@ -63,5 +63,7 @@ variable "tags" {
 }
 
 variable "env" {
-  type = string
+  type        = string
+  description = "Environment name, e.g., dev, uat, prod"
+  default     = "dev"
 }
