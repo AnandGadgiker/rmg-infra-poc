@@ -29,13 +29,26 @@ resource "azurerm_key_vault_access_policy" "terraform_sp" {
   ]
 }
 
+# Optional: Access Policy for Azure Provider identity (used during plan/apply)
+resource "azurerm_key_vault_access_policy" "provider_identity" {
+  count        = var.provider_object_id != null ? 1 : 0
+  key_vault_id = azurerm_key_vault.kv.id
+  tenant_id    = var.tenant_id
+  object_id    = var.provider_object_id
+
+  secret_permissions = ["Get"]
+}
+
 # Delay to allow access policy propagation
 resource "null_resource" "wait_for_policy" {
   provisioner "local-exec" {
-    command = "sleep 30"
+    command = "sleep ${var.policy_propagation_delay}"
   }
 
-  depends_on = [azurerm_key_vault_access_policy.terraform_sp]
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_sp,
+    azurerm_key_vault_access_policy.provider_identity
+  ]
 }
 
 # AAD Client Secret
@@ -66,3 +79,4 @@ output "key_vault_key_id" {
 output "aad_client_secret_name" {
   value = azurerm_key_vault_secret.aad_client_secret.name
 }
+``
