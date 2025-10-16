@@ -35,3 +35,7 @@ variable "tags" {
   default     = {}
   description = "Tags to assign to the Storage Account"
 }
+
+variable "env" {
+  type = string
+}

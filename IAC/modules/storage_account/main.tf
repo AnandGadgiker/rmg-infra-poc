@@ -8,7 +8,14 @@ resource "azurerm_storage_account" "storage" {
   is_hns_enabled                = true
   public_network_access_enabled = false
 
-  tags = var.tags
+  # Merge mandatory tags with user-provided tags
+  tags = merge(
+    var.tags,
+    {
+      Owner = "rmg-devops" # mandatory tag enforced by policy
+      Env   = var.env      # optional
+    }
+  )
 
   blob_properties {
     delete_retention_policy {

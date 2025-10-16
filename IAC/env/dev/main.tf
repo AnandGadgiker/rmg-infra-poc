@@ -24,11 +24,12 @@ resource "azurerm_resource_group" "rg" {
 
 # 2️⃣ Key Vault
 module "kv" {
-  source              = "../../modules/keyvault"
-  key_vault_name      = var.key_vault_name
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  tenant_id           = var.tenant_id
+  source                 = "../../modules/keyvault"
+  key_vault_name         = var.key_vault_name
+  location               = var.location
+  resource_group_name    = azurerm_resource_group.rg.name
+  tenant_id              = var.tenant_id
+  terraform_sp_object_id = var.terraform_sp_object_id
   tags = {
     Owner = "rmg-devops"
     Env   = var.env
@@ -41,12 +42,14 @@ module "app_service" {
   app_service_name      = var.app_service_name
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg.name
+
+  # Application settings
   app_settings = {
     ENV = var.env
   }
+
   subnet_id = var.subnet_id
 }
-
 
 # 4️⃣ Cosmos DB
 module "cosmos" {
@@ -73,8 +76,11 @@ module "stg" {
   storage_account_name = var.storage_account_name
   location             = var.location
   resource_group_name  = azurerm_resource_group.rg.name
-  key_vault_key_id     = module.kv.key_vault_key_id
   subnet_id            = var.subnet_id
+  env                  = var.env
+  tags = {
+    Project = "rmg-project"
+  }
 }
 
 # 7️⃣ Event Hub

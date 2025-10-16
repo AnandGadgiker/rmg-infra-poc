@@ -18,6 +18,11 @@ variable "tenant_id" {
   description = "Azure AD tenant ID"
 }
 
+variable "terraform_sp_object_id" {
+  type        = string
+  description = "Object ID of the SP or Managed Identity running Terraform"
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
