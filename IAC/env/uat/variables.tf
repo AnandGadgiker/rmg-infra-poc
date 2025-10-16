@@ -61,3 +61,7 @@ variable "tags" {
   description = "Tags to assign resources"
 }
 
+variable "env" {
+  type = string
+}
+
