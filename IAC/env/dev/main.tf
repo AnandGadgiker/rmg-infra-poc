@@ -42,11 +42,11 @@ module "app_service" {
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg.name
   app_settings = {
-    ENV               = var.env
-    AAD_CLIENT_SECRET = module.kv.aad_client_secret_name
+    ENV = var.env
   }
   subnet_id = var.subnet_id
 }
+
 
 # 4️⃣ Cosmos DB
 module "cosmos" {
