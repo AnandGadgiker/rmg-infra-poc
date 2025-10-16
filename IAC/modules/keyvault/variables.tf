@@ -41,6 +41,7 @@ variable "env" {
 
 variable "provider_object_id" {
   type        = string
-  description = "Object ID of the provider identity (e.g., Azure App Service, Function App)"
   default     = null
+  description = "Object ID of the provider identity (optional) that needs access to Key Vault"
 }
+

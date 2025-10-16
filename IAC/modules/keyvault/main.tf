@@ -25,15 +25,20 @@ resource "azurerm_key_vault_access_policy" "terraform_sp" {
   ]
 }
 
-# Access Policy for Provider Identity (optional)
+# Access Policy for Provider Identity
 resource "azurerm_key_vault_access_policy" "provider_identity" {
   count        = var.provider_object_id != null ? 1 : 0
   key_vault_id = azurerm_key_vault.kv.id
   tenant_id    = var.tenant_id
   object_id    = var.provider_object_id
 
-  key_permissions    = ["Get", "List", "Encrypt", "Decrypt"]
-  secret_permissions = ["Get", "List"]
+  key_permissions = [
+    "Get", "List", "Encrypt", "Decrypt"
+  ]
+
+  secret_permissions = [
+    "Get", "List"
+  ]
 }
 
 # Optional: Wait for policy propagation
