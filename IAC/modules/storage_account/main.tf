@@ -12,9 +12,9 @@ resource "azurerm_storage_account" "storage" {
   tags = merge(
     var.tags,
     {
-      Owner       = "rmg-devops"  # mandatory
-      Env         = var.env       # mandatory
-      Criticality = "High"        # mandatory per policy
+      Owner       = "rmg-devops" # mandatory
+      Env         = var.env      # mandatory
+      Criticality = "High"       # mandatory per policy
     }
   )
 

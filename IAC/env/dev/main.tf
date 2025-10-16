@@ -82,11 +82,11 @@ module "stg" {
   resource_group_name  = azurerm_resource_group.rg.name
   subnet_id            = var.subnet_id
   env                  = var.env
-  tags                  = merge(
+  tags = merge(
     var.tags,
     {
       Owner       = "rmg-devops"
-      Criticality = "High"  # mandatory per policy
+      Criticality = "High" # mandatory per policy
     }
   )
 
