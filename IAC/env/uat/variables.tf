@@ -54,3 +54,7 @@ variable "aad_client_secret_value" {
   type = string
 }
 
+variable "terraform_sp_object_id" {
+  type        = string
+  description = "Object ID of the Service Principal running Terraform"
+}
