@@ -1,4 +1,4 @@
-# 1️⃣ Key Vault
+# Key Vault
 resource "azurerm_key_vault" "kv" {
   name                     = var.key_vault_name
   location                 = var.location
@@ -6,17 +6,10 @@ resource "azurerm_key_vault" "kv" {
   tenant_id                = var.tenant_id
   sku_name                 = "standard"
   purge_protection_enabled = true
-
-  tags = merge(
-    var.tags,
-    {
-      Owner       = "rmg-devops"
-      Environment = var.env
-    }
-  )
+  tags                     = var.tags
 }
 
-# 2️⃣ Access Policy for Terraform SP (required to create keys)
+# Access Policy for Terraform SP (required to create keys and secrets)
 resource "azurerm_key_vault_access_policy" "terraform_sp" {
   key_vault_id = azurerm_key_vault.kv.id
   tenant_id    = var.tenant_id
@@ -31,16 +24,18 @@ resource "azurerm_key_vault_access_policy" "terraform_sp" {
   ]
 }
 
-# 3️⃣ Optional: wait for policy propagation
+# Optional: Wait for policy propagation
 resource "null_resource" "wait_for_policy" {
   provisioner "local-exec" {
-    command = "sleep ${var.policy_propagation_delay}"
+    command = "sleep 15"
   }
 
-  depends_on = [azurerm_key_vault_access_policy.terraform_sp]
+  depends_on = [
+    azurerm_key_vault_access_policy.terraform_sp
+  ]
 }
 
-# 4️⃣ Customer Managed Key (CMK)
+# Customer Managed Key (CMK)
 resource "azurerm_key_vault_key" "cmk" {
   name         = "cmk-key"
   key_vault_id = azurerm_key_vault.kv.id
@@ -51,7 +46,7 @@ resource "azurerm_key_vault_key" "cmk" {
   depends_on = [null_resource.wait_for_policy]
 }
 
-# 5️⃣ Outputs
+# Outputs
 output "key_vault_key_id" {
   value = azurerm_key_vault_key.cmk.id
 }

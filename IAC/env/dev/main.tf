@@ -31,9 +31,12 @@ module "kv" {
   tenant_id              = var.tenant_id
   terraform_sp_object_id = var.terraform_sp_object_id
   env                    = var.env
-  tags = {
-    Owner = "rmg-devops"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Owner = "rmg-devops"
+    }
+  )
 }
 # 3️⃣ App Service Plan + App Service
 module "app_service" {
@@ -42,13 +45,14 @@ module "app_service" {
   app_service_name      = var.app_service_name
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg.name
+  subnet_id             = var.subnet_id
 
   # Application settings
   app_settings = {
     ENV = var.env
   }
 
-  subnet_id = var.subnet_id
+  depends_on = [module.kv, module.stg]
 }
 
 # 4️⃣ Cosmos DB
@@ -78,9 +82,15 @@ module "stg" {
   resource_group_name  = azurerm_resource_group.rg.name
   subnet_id            = var.subnet_id
   env                  = var.env
-  tags = {
-    Project = "rmg-project"
-  }
+  tags                  = merge(
+    var.tags,
+    {
+      Owner       = "rmg-devops"
+      Criticality = "High"  # mandatory per policy
+    }
+  )
+
+  depends_on = [module.kv]
 }
 
 # 7️⃣ Event Hub
