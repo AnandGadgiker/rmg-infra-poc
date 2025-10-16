@@ -28,3 +28,13 @@ variable "tags" {
   default     = {}
   description = "Tags to assign to the Key Vault"
 }
+
+variable "policy_propagation_delay" {
+  type        = number
+  default     = 15
+  description = "Seconds to wait for Key Vault access policy propagation"
+}
+
+variable "env" {
+  type = string
+}

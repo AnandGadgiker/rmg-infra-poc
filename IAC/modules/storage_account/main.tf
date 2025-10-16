@@ -8,12 +8,12 @@ resource "azurerm_storage_account" "storage" {
   is_hns_enabled                = true
   public_network_access_enabled = false
 
-  # Merge mandatory tags with user-provided tags
+  # Merge mandatory tags enforced by Azure Policy with user-provided tags
   tags = merge(
     var.tags,
     {
-      Owner = "rmg-devops" # mandatory tag enforced by policy
-      Env   = var.env      # optional
+      Owner       = "rmg-devops" # mandatory
+      Environment = var.env      # mandatory policy tag
     }
   )
 
@@ -38,6 +38,7 @@ resource "azurerm_storage_account" "storage" {
   }
 }
 
+# Private Endpoint (optional)
 resource "azurerm_private_endpoint" "storage_pe" {
   name                = "storage-private-endpoint"
   location            = var.location
@@ -50,4 +51,7 @@ resource "azurerm_private_endpoint" "storage_pe" {
     subresource_names              = ["blob"]
     is_manual_connection           = false
   }
+
+  # Wait for storage account to be ready
+  depends_on = [azurerm_storage_account.storage]
 }
