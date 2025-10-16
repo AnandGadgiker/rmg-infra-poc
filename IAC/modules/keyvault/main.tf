@@ -13,33 +13,33 @@ resource "azurerm_key_vault" "kv" {
     object_id = var.terraform_sp_object_id
 
     key_permissions = [
-      "get",
-      "list",
-      "create",
-      "update",
-      "delete",
-      "recover",
-      "backup",
-      "restore",
-      "encrypt",
-      "decrypt",
-      "sign",
-      "verify"
+      "Get",
+      "List",
+      "Create",
+      "Update",
+      "Delete",
+      "Recover",
+      "Backup",
+      "Restore",
+      "Encrypt",
+      "Decrypt",
+      "Sign",
+      "Verify"
     ]
 
     secret_permissions = [
-      "get",
-      "list",
-      "set",
-      "delete",
-      "recover",
-      "backup",
-      "restore"
+      "Get",
+      "List",
+      "Set",
+      "Delete",
+      "Recover",
+      "Backup",
+      "Restore"
     ]
 
     certificate_permissions = [
-      "get",
-      "list"
+      "Get",
+      "List"
     ]
   }
 
