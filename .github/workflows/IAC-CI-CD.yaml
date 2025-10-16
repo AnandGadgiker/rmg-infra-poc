@@ -140,10 +140,46 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Terraform Apply
-        run: terraform -chdir=${{ env.TF_WORKDIR }} apply -auto-approve tfplan
+  #    - name: Terraform Apply
+  #     run: terraform -chdir=${{ env.TF_WORKDIR }} apply -auto-approve tfplan
+   #     env:
+    #      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      #    ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      #    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        #  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Terraform Init
+        run: terraform -chdir=${{ env.TF_WORKDIR }} init
+
+      - name: Terraform Apply - Stage 1 (Key Vault + Access Policies)
+        run: |
+          terraform -chdir=${{ env.TF_WORKDIR }} apply \
+          -target=module.kv.azurerm_key_vault.kv \
+          -target=module.kv.azurerm_key_vault_access_policy.terraform_sp \
+          -target=module.kv.azurerm_key_vault_access_policy.provider_identity \
+          -var-file="dev.tfvars" \
+          -auto-approve
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Wait for Key Vault access policy propagation
+        run: sleep 30
+
+      - name: Terraform Plan - Stage 2 (Full Plan)
+        run: terraform -chdir=${{ env.TF_WORKDIR }} plan -var-file="dev.tfvars" -out=tfplan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Terraform Apply - Stage 2 (Full Apply)
+        run: terraform -chdir=${{ env.TF_WORKDIR }} apply -auto-approve tfplan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}  
