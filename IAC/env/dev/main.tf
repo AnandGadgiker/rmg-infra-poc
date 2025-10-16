@@ -24,15 +24,15 @@ resource "azurerm_resource_group" "rg" {
 
 # 2️⃣ Key Vault
 module "kv" {
-  source                  = "../../modules/keyvault"
-  key_vault_name          = var.key_vault_name
-  location                = var.location
-  resource_group_name     = azurerm_resource_group.rg.name
-  tenant_id               = var.tenant_id
-  aad_client_secret_value = var.aad_client_secret_value
-  terraform_sp_object_id  = var.terraform_sp_object_id # <--- Pass Terraform SP object ID
+  source              = "../../modules/keyvault"
+  key_vault_name      = var.key_vault_name
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags = {
+    Owner = "rmg-devops"
+    Env   = var.env
+  }
 }
-
 # 3️⃣ App Service Plan + App Service
 module "app_service" {
   source                = "../../modules/app_service"
