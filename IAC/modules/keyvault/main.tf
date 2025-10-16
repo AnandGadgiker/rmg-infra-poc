@@ -29,13 +29,22 @@ resource "azurerm_key_vault_access_policy" "terraform_sp" {
   ]
 }
 
+# Delay to allow access policy propagation
+resource "null_resource" "wait_for_policy" {
+  provisioner "local-exec" {
+    command = "sleep 30"
+  }
+
+  depends_on = [azurerm_key_vault_access_policy.terraform_sp]
+}
+
 # AAD Client Secret
 resource "azurerm_key_vault_secret" "aad_client_secret" {
   name         = "aad-client-secret"
   value        = var.aad_client_secret_value
   key_vault_id = azurerm_key_vault.kv.id
 
-  depends_on = [azurerm_key_vault_access_policy.terraform_sp]
+  depends_on = [null_resource.wait_for_policy]
 }
 
 # Customer Managed Key (CMK)
@@ -46,7 +55,7 @@ resource "azurerm_key_vault_key" "cmk" {
   key_size     = 2048
   key_opts     = ["encrypt", "decrypt"]
 
-  depends_on = [azurerm_key_vault_access_policy.terraform_sp]
+  depends_on = [null_resource.wait_for_policy]
 }
 
 # Outputs
