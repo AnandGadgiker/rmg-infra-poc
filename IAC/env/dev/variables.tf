@@ -63,3 +63,8 @@ variable "env" {
   description = "Environment name, e.g., dev, uat, prod"
   default     = "dev"
 }
+
+variable "provider_object_id" {
+  type        = string
+  description = "Object ID of the provider identity that needs access to Key Vault"
+}
