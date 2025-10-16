@@ -11,6 +11,8 @@ resource "azurerm_eventhub" "hub" {
   resource_group_name = var.resource_group_name
   partition_count     = 2
   message_retention   = 1
+
+  depends_on = [azurerm_eventhub_namespace.namespace]
 }
 
 resource "azurerm_private_endpoint" "eventhub_pe" {
@@ -25,4 +27,6 @@ resource "azurerm_private_endpoint" "eventhub_pe" {
     subresource_names              = ["namespace"]
     is_manual_connection           = false
   }
+
+  depends_on = [azurerm_eventhub_namespace.namespace]
 }
