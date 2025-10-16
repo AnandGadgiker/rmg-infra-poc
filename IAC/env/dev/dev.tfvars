@@ -14,7 +14,6 @@ tenant_id               = "189de737-c93a-4f5a-8b68-6f4ca9941912"
 aad_client_secret_value = "poc-secrete"
 terraform_sp_object_id  = "62cc895d-5238-4e6c-94f2-82a7eae58d42"
 provider_object_id      = "ea69df91-215d-4d92-a051-299267045d07"
-env = "dev"
 tags = {
   Owner       = "Akash"
   Environment = "Dev" # or "UAT"
