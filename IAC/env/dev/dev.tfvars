@@ -12,3 +12,4 @@ subnet_id               = "/subscriptions/1caa3d80-14f8-4775-b51b-247372d730b0/r
 key_vault_name          = "kv-dev-rmg"
 tenant_id               = "189de737-c93a-4f5a-8b68-6f4ca9941912"
 aad_client_secret_value = "poc-secrete"
+terraform_sp_object_id  = "62cc895d-5238-4e6c-94f2-82a7eae58d42"

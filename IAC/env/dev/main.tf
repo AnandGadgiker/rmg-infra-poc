@@ -30,6 +30,7 @@ module "kv" {
   resource_group_name     = azurerm_resource_group.rg.name
   tenant_id               = var.tenant_id
   aad_client_secret_value = var.aad_client_secret_value
+  terraform_sp_object_id  = var.terraform_sp_object_id # <--- Pass Terraform SP object ID
 }
 
 # 3️⃣ App Service Plan + App Service

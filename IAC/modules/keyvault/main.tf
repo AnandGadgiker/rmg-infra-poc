@@ -7,6 +7,42 @@ resource "azurerm_key_vault" "kv" {
   sku_name                 = "standard"
   purge_protection_enabled = true
 
+  # Access policies for Terraform SP
+  access_policy {
+    tenant_id = var.tenant_id
+    object_id = var.terraform_sp_object_id
+
+    key_permissions = [
+      "get",
+      "list",
+      "create",
+      "update",
+      "delete",
+      "recover",
+      "backup",
+      "restore",
+      "encrypt",
+      "decrypt",
+      "sign",
+      "verify"
+    ]
+
+    secret_permissions = [
+      "get",
+      "list",
+      "set",
+      "delete",
+      "recover",
+      "backup",
+      "restore"
+    ]
+
+    certificate_permissions = [
+      "get",
+      "list"
+    ]
+  }
+
   tags = var.tags
 }
 
@@ -17,13 +53,13 @@ resource "azurerm_key_vault_secret" "aad_client_secret" {
   key_vault_id = azurerm_key_vault.kv.id
 }
 
-# Customer Managed Key (CMK) for other resources
+# Customer Managed Key (CMK)
 resource "azurerm_key_vault_key" "cmk" {
-  name         = "cmk-key" # Give a meaningful name
+  name         = "cmk-key"
   key_vault_id = azurerm_key_vault.kv.id
   key_type     = "RSA"
   key_size     = 2048
-  key_opts     = ["encrypt", "decrypt"] # mandatory
+  key_opts     = ["encrypt", "decrypt"]
 }
 
 # Outputs
