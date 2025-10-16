@@ -25,6 +25,8 @@ resource "azurerm_container_registry" "acr" {
     key_vault_key_id   = var.key_vault_key_id
     identity_client_id = null
   }
+
+  tags = var.tags
 }
 
 output "principal_id" {

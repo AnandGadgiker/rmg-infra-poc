@@ -25,3 +25,10 @@ variable "geo_replication_location" {
   type        = string
   default     = null
 }
+
+variable "tags" {
+  description = "Optional tags for the ACR"
+  type        = map(string)
+  default     = {}
+}
+
