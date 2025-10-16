@@ -17,3 +17,9 @@ variable "tenant_id" {
 variable "aad_client_secret_value" {
   type = string
 }
+
+variable "tags" {
+  description = "Optional tags for the Key Vault"
+  type        = map(string)
+  default     = {}
+}
