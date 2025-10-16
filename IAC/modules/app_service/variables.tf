@@ -1,56 +1,71 @@
+##############################
+# App Service Variables
+##############################
+
 variable "app_service_plan_name" {
-  type = string
+  description = "Name of the App Service Plan"
+  type        = string
 }
 
 variable "app_service_name" {
-  type = string
+  description = "Name of the App Service"
+  type        = string
 }
 
 variable "location" {
-  type = string
+  description = "Azure region"
+  type        = string
 }
 
 variable "resource_group_name" {
-  type = string
+  description = "Resource Group name"
+  type        = string
 }
 
 variable "subnet_id" {
-  type    = string
-  default = null
+  description = "Subnet ID for the private endpoint (optional)"
+  type        = string
+  default     = null
 }
 
 variable "kind" {
-  type    = string
-  default = "Linux" # "Linux" or "App"
+  description = "Specifies the kind of the App Service (Linux or Windows)"
+  type        = string
+  default     = "Linux"
 }
 
 variable "sku_tier" {
-  type    = string
-  default = "P1v2"
+  description = "App Service Plan tier (e.g., P1v3)"
+  type        = string
+  default     = "P1v3"
 }
 
 variable "sku_size" {
-  type    = string
-  default = "P1v2"
+  description = "App Service Plan size (e.g., P1v3)"
+  type        = string
+  default     = "P1v3"
 }
 
 variable "app_settings" {
-  type    = map(string)
-  default = {}
+  description = "Custom application settings for the App Service"
+  type        = map(string)
+  default     = {}
 }
 
 variable "storage_account_name" {
-  type    = string
-  default = null
+  description = "Optional storage account name for the App Service"
+  type        = string
+  default     = null
 }
 
 variable "key_vault_name" {
-  type    = string
-  default = null
+  description = "Optional Key Vault name for injecting secrets"
+  type        = string
+  default     = null
 }
 
 variable "key_vault_key_id" {
-  type    = string
-  default = null
+  description = "Optional Key Vault key for CMK encryption"
+  type        = string
+  default     = null
 }
-

@@ -1,57 +1,47 @@
-resource "azurerm_storage_account" "storage" {
-  name                     = var.storage_account_name
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "GRS"
+resource "azurerm_service_plan" "this" {
+  name                = var.app_service_plan_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  os_type             = var.kind
+  sku_name            = var.sku_size
+}
 
-  min_tls_version               = "TLS1_2"
-  public_network_access_enabled = false
-  is_hns_enabled                = true
+resource "azurerm_linux_web_app" "this" {
+  name                = var.app_service_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  service_plan_id     = azurerm_service_plan.this.id
 
   identity {
     type = "SystemAssigned"
   }
 
-  dynamic "customer_managed_key" {
-    for_each = var.key_vault_key_id != null ? [1] : []
-    content {
-      key_vault_key_id          = var.key_vault_key_id
-      user_assigned_identity_id = null
+  site_config {
+    always_on = true
+    ftps_state = "Disabled"
+    application_stack {
+      node_version = "18-lts" # change if you’re using Java, Python, etc.
     }
   }
 
-  blob_properties {
-    delete_retention_policy {
-      days = 7
-    }
-  }
-
-  queue_properties {
-    logging {
-      delete                = true
-      read                  = true
-      write                 = true
-      version               = "1.0"
-      retention_policy_days = 7
-    }
-  }
-
-  sas_policy {
-    expiration_period = "PT24H"
-  }
+  app_settings = merge({
+    "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+    "WEBSITES_PORT"                       = "8080"
+  }, var.app_settings)
 }
 
-resource "azurerm_private_endpoint" "storage_pe" {
-  name                = "storage-private-endpoint"
+# Optional: Private Endpoint (if needed)
+resource "azurerm_private_endpoint" "app_pe" {
+  count               = var.subnet_id != null ? 1 : 0
+  name                = "${var.app_service_name}-pe"
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id
 
   private_service_connection {
-    name                           = "storage-priv-conn"
-    private_connection_resource_id = azurerm_storage_account.storage.id
-    subresource_names              = ["blob"]
+    name                           = "${var.app_service_name}-priv-conn"
+    private_connection_resource_id = azurerm_linux_web_app.this.id
+    subresource_names              = ["sites"]
     is_manual_connection           = false
   }
 }
