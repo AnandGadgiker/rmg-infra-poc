@@ -70,12 +70,12 @@ module "acr" {
 
 # 6️⃣ Storage Account
 module "stg" {
-  source               = "../../modules/storage_account"
-  storage_account_name = var.storage_account_name
-  location             = var.location
-  resource_group_name  = azurerm_resource_group.rg.name
-  key_vault_key_id     = module.kv.key_vault_key_id
-  subnet_id            = var.subnet_id
+  source                 = "../../modules/storage_account"
+  storage_account_name   = var.storage_account_name
+  location               = var.location
+  resource_group_name    = azurerm_resource_group.rg.name
+  key_vault_key_id       = module.kv.key_vault_key_id
+  subnet_id              = var.subnet_id
   terraform_sp_object_id = var.terraform_sp_object_id
 }
 
