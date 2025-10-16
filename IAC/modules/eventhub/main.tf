@@ -13,6 +13,13 @@ resource "azurerm_eventhub" "hub" {
   message_retention   = 1
 
   depends_on = [azurerm_eventhub_namespace.namespace]
+  
+  timeouts {
+    create = "10m"
+    update = "10m"
+    delete = "10m"
+  }
+
 }
 
 resource "azurerm_private_endpoint" "eventhub_pe" {
