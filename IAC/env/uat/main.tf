@@ -30,9 +30,9 @@ module "kv" {
   resource_group_name    = azurerm_resource_group.rg.name
   tenant_id              = var.tenant_id
   terraform_sp_object_id = var.terraform_sp_object_id
+  env                    = var.env
   tags = {
     Owner = "rmg-devops"
-    Env   = var.env
   }
 }
 # 3️⃣ App Service Plan + App Service
