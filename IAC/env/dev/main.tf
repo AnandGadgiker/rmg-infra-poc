@@ -31,7 +31,7 @@ module "kv" {
   resource_group_name     = azurerm_resource_group.rg.name
   tenant_id               = var.tenant_id
   aad_client_secret_value = var.aad_client_secret_value
-  tags                    = {
+  tags = {
     Owner = "rmg-devops"
     Env   = var.env
   }
@@ -49,7 +49,7 @@ module "app_service" {
     AAD_CLIENT_SECRET = module.kv.aad_client_secret_name
   }
   subnet_id = var.subnet_id
-  tags      = {
+  tags = {
     Owner = "rmg-devops"
     Env   = var.env
   }
@@ -62,7 +62,7 @@ module "cosmos" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   key_vault_key_id    = module.kv.key_vault_key_id
-  tags                = {
+  tags = {
     Owner = "rmg-devops"
     Env   = var.env
   }
@@ -75,7 +75,7 @@ module "acr" {
   location                 = var.location
   resource_group_name      = azurerm_resource_group.rg.name
   key_vault_key_id         = module.kv.key_vault_key_id
-  geo_replication_location = null  # optional
+  geo_replication_location = null # optional
   tags = {
     Owner = "rmg-devops"
     Env   = var.env
