@@ -14,10 +14,6 @@ variable "app_service_name" {
   type = string
 }
 
-variable "env" {
-  type = string
-}
-
 variable "cosmosdb_name" {
   type = string
 }
