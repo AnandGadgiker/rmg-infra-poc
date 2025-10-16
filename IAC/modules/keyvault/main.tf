@@ -79,4 +79,3 @@ output "key_vault_key_id" {
 output "aad_client_secret_name" {
   value = azurerm_key_vault_secret.aad_client_secret.name
 }
-``
