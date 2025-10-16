@@ -37,6 +37,7 @@ resource "azurerm_key_vault_access_policy" "provider_identity" {
   object_id    = var.provider_object_id
 
   secret_permissions = ["Get"]
+  key_permissions    = ["Get"]
 }
 
 # Delay to allow access policy propagation
