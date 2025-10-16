@@ -12,6 +12,11 @@ on:
           - dev
           - uat
 
+# ✅ Prevent concurrent runs for the same environment (avoids state lock issues)
+concurrency:
+  group: terraform-${{ github.event.inputs.environment }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
   pull-requests: write
@@ -46,6 +51,7 @@ jobs:
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
 
+      # Clean cache to ensure fresh state each run
       - name: Clean Terraform cache
         run: |
           rm -rf ${{ env.TF_WORKDIR }}/.terraform
@@ -90,6 +96,7 @@ jobs:
           name: terraform-plan-${{ github.event.inputs.environment }}
           path: ${{ env.TF_WORKDIR }}/tfplan
 
+  # 🔐 Manual approval before apply
   approval:
     needs: terraform
     runs-on: ubuntu-latest
