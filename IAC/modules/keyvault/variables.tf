@@ -31,7 +31,7 @@ variable "tags" {
 
 variable "policy_propagation_delay" {
   type        = number
-  default     = 15
+  default     = 45
   description = "Seconds to wait for Key Vault access policy propagation"
 }
 

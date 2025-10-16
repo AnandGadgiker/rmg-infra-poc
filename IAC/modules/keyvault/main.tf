@@ -27,7 +27,7 @@ resource "azurerm_key_vault_access_policy" "terraform_sp" {
 # Optional: Wait for policy propagation
 resource "null_resource" "wait_for_policy" {
   provisioner "local-exec" {
-    command = "sleep 15"
+    command = "sleep 45"
   }
 
   depends_on = [
