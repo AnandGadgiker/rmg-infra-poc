@@ -13,6 +13,11 @@ variable "resource_group_name" {
   description = "Name of the Resource Group"
 }
 
+variable "tenant_id" {
+  type        = string
+  description = "Azure AD tenant ID"
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
