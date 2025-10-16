@@ -1,4 +1,4 @@
-location                = "East US"
+location                = "UK South"
 resource_group_name     = "dev-rg"
 app_service_plan_name   = "dev-app-plan"
 app_service_name        = "dev-app-service"
