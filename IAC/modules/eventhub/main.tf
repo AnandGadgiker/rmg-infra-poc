@@ -3,6 +3,12 @@ resource "azurerm_eventhub_namespace" "namespace" {
   location            = var.location
   resource_group_name = var.resource_group_name
   sku                 = "Standard"
+
+  timeouts {
+    create = "10m"
+    update = "10m"
+    delete = "10m"
+  }
 }
 
 resource "azurerm_eventhub" "hub" {
@@ -13,13 +19,6 @@ resource "azurerm_eventhub" "hub" {
   message_retention   = 1
 
   depends_on = [azurerm_eventhub_namespace.namespace]
-  
-  timeouts {
-    create = "10m"
-    update = "10m"
-    delete = "10m"
-  }
-
 }
 
 resource "azurerm_private_endpoint" "eventhub_pe" {
