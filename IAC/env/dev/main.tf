@@ -48,12 +48,12 @@ module "cosmos" {
 
 # Azure Container Registry
 module "acr" {
-  source              = "../../modules/acr"
-  acr_name            = var.acr_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  key_vault_key_id    = module.kv.key_vault_key_id
-  geo_replication_location = null  # optional, omit or null
+  source                   = "../../modules/acr"
+  acr_name                 = var.acr_name
+  location                 = var.location
+  resource_group_name      = var.resource_group_name
+  key_vault_key_id         = module.kv.key_vault_key_id
+  geo_replication_location = null # optional, omit or null
 }
 
 # Storage Account

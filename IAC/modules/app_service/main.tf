@@ -17,7 +17,7 @@ resource "azurerm_linux_web_app" "this" {
   }
 
   site_config {
-    always_on = true
+    always_on  = true
     ftps_state = "Disabled"
     application_stack {
       node_version = "18-lts" # change if you’re using Java, Python, etc.
