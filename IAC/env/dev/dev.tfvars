@@ -18,9 +18,9 @@ acr_names = [
 
 # New: Container Apps
 container_app_names = [
-  "app1-dev",
-  "app2-dev",
-  "app3-dev"
+  "app1-dev1",
+  "app2-dev2",
+  "app3-dev3"
 ]
 
 tags = {
