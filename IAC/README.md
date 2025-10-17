@@ -26,7 +26,7 @@ IAC/
 │   └── outputs/
 │       ├── main.tf
 │       └── variables.tf
-└── environments/
+└── env/
     ├── dev/
 	│	├─backend.tf
     │   ├── main.tf

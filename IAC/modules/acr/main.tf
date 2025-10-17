@@ -1,15 +1,20 @@
+variable "acr_name" {}
+variable "location" {}
+variable "resource_group_name" {}
+variable "tags" {
+  type    = map(string)
+  default = {}
+}
+
 resource "azurerm_container_registry" "acr" {
   name                = var.acr_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  sku                 = "Standard"
+  sku                 = "Basic"
   admin_enabled       = false
+  tags                = var.tags
+}
 
-  dynamic "georeplications" {
-    for_each = var.geo_replication_location == null ? [] : [var.geo_replication_location]
-    content {
-      location                = georeplications.value
-      zone_redundancy_enabled = false
-    }
-  }
+output "acr_login_server" {
+  value = azurerm_container_registry.acr.login_server
 }
