@@ -5,10 +5,6 @@ resource "azurerm_container_registry" "acr" {
   sku                 = "Standard"
   admin_enabled       = false
 
-  encryption {
-    key_vault_key_id = var.key_vault_key_id
-  }
-
   dynamic "georeplications" {
     for_each = var.geo_replication_location == null ? [] : [var.geo_replication_location]
     content {
