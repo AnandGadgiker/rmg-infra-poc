@@ -28,3 +28,8 @@ variable "log_analytics_workspace_id" {
   description = "Log Analytics Workspace ID for diagnostics"
   type        = string
 }
+
+variable "acr_id" {
+  description = "ID of the ACR to assign AcrPull role"
+  type        = string
+}

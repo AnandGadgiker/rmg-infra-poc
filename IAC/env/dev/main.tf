@@ -103,9 +103,11 @@ module "container_apps" {
   resource_group_name          = azurerm_resource_group.rg.name
   container_app_environment_id = azurerm_container_app_environment.cae.id
   image                        = "${module.acrs[replace(each.key, "app", "acr")].acr_login_server}/${each.key}:latest"
+  acr_id                       = module.acrs[replace(each.key, "app", "acr")].acr_id
   tags                         = var.tags
   log_analytics_workspace_id   = module.log_analytics.log_analytics_id
 }
+
 
 # -------------------------------
 # Updated: Outputs aggregator
