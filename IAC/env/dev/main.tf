@@ -36,6 +36,7 @@ module "kv" {
   resource_group_name    = azurerm_resource_group.rg.name
   terraform_sp_object_id = var.terraform_sp_object_id
   provider_object_id     = var.provider_object_id
+  env                    = var.env
   tags = merge(
     var.tags,
     {
