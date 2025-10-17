@@ -32,6 +32,7 @@ module "kv" {
   terraform_sp_object_id = var.terraform_sp_object_id
   provider_object_id     = var.provider_object_id
   env                    = var.env
+  key_vault_uri          = module.kv.key_vault_uri
   tags = merge(
     var.tags,
     {

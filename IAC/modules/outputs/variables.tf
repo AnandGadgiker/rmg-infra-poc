@@ -33,3 +33,9 @@ variable "app_service_default_hostname" {
 variable "key_vault_key_id" {
   type = string
 }
+
+variable "key_vault_uri" {
+  type        = string
+  description = "Key Vault URI"
+}
+

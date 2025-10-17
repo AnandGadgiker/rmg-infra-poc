@@ -45,3 +45,8 @@ variable "provider_object_id" {
   description = "Object ID of the provider identity (optional) that needs access to Key Vault"
 }
 
+variable "sku_name" {
+  description = "SKU name of the Key Vault (e.g. standard or premium)"
+  type        = string
+  default     = "standard"
+}

@@ -31,3 +31,7 @@ output "key_vault_key_id" {
   value = var.key_vault_key_id
 }
 
+output "key_vault_uri" {
+  value       = var.key_vault_uri
+  description = "The URI of the Key Vault"
+}
