@@ -32,7 +32,6 @@ module "kv" {
   terraform_sp_object_id = var.terraform_sp_object_id
   provider_object_id     = var.provider_object_id
   env                    = var.env
-  key_vault_uri          = module.kv.key_vault_uri
   tags = merge(
     var.tags,
     {
@@ -118,4 +117,5 @@ module "dev_outputs" {
   eventhub_name                = var.eventhub_name
   app_service_name             = var.app_service_name
   app_service_default_hostname = "${var.app_service_name}.azurewebsites.net"
+  key_vault_uri                = module.kv.key_vault_uri
 }
