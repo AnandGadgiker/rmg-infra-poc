@@ -28,7 +28,6 @@ module "kv" {
   key_vault_name         = var.key_vault_name
   location               = var.location
   resource_group_name    = azurerm_resource_group.rg.name
-  tenant_id              = var.tenant_id
   terraform_sp_object_id = var.terraform_sp_object_id
   provider_object_id     = var.provider_object_id
   env                    = var.env
