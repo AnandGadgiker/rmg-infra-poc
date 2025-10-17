@@ -68,6 +68,12 @@ resource "azurerm_key_vault" "kv" {
   }
 }
 
+# Delay to allow Key Vault access policies to propagate
+resource "time_sleep" "wait_for_policy" {
+  depends_on      = [azurerm_key_vault.kv]
+  create_duration = "60s"
+}
+
 # Customer Managed Key (CMK)
 resource "azurerm_key_vault_key" "cmk" {
   name         = "cmk-key"
@@ -84,7 +90,5 @@ resource "azurerm_key_vault_key" "cmk" {
     notify_before_expiry = "P29D"
   }
 
-  #  lifecycle {
-  #    prevent_destroy = true
-  #  }
+  depends_on = [time_sleep.wait_for_policy]
 }
