@@ -1,24 +1,19 @@
-output "key_vault_id" {
-  value       = azurerm_key_vault.kv.id
-  description = "Resource ID of the Key Vault"
-}
-
 output "key_vault_key_id" {
-  value       = azurerm_key_vault_key.cmk.id
-  description = "CMK ID"
-}
-
-output "key_vault_uri" {
-  value       = azurerm_key_vault.kv.vault_uri
-  description = "Vault URI"
+  value = azurerm_key_vault_key.cmk.id
 }
 
 output "user_assigned_identity_id" {
-  value       = azurerm_user_assigned_identity.uami.id
-  description = "UAMI resource ID"
+  value = azurerm_user_assigned_identity.uami.id
 }
 
 output "user_assigned_identity_principal_id" {
-  value       = azurerm_user_assigned_identity.uami.principal_id
-  description = "UAMI principal ID"
+  value = azurerm_user_assigned_identity.uami.principal_id
+}
+
+output "key_vault_id" {
+  value = azurerm_key_vault.kv.id
+}
+
+output "key_vault_uri" {
+  value = azurerm_key_vault.kv.vault_uri
 }

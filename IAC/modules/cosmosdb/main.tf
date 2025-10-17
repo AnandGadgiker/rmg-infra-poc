@@ -5,21 +5,26 @@ resource "azurerm_cosmosdb_account" "cosmos" {
   offer_type          = "Standard"
   kind                = "GlobalDocumentDB"
 
+  # Required consistency policy
   consistency_policy {
-    consistency_level       = "Session"
-    max_interval_in_seconds = 5
-    max_staleness_prefix    = 100
+    consistency_level = "Session"
   }
 
-  enable_automatic_failover = false
-
-  capabilities {
-    name = "EnableServerless"
+  # At least one geo_location block is mandatory
+  geo_location {
+    location          = var.location
+    failover_priority = 0
   }
 
-  default_identity_type = "SystemAssigned"
+  # Enable managed identity so Cosmos can use CMK
+  identity {
+    type = "SystemAssigned"
+  }
 
-  customer_managed_key {
-    key_vault_key_id = var.key_vault_key_id
+  # Customer Managed Key (CMK) binding
+  key_vault_key_id = var.key_vault_key_id
+
+  tags = {
+    Env = "cosmos-${var.env}"
   }
 }

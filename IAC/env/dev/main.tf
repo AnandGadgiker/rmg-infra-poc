@@ -35,12 +35,9 @@ module "stg" {
   location                  = var.location
   resource_group_name       = azurerm_resource_group.rg.name
   env                       = var.env
-  key_vault_key_id          = azurerm_key_vault_key.cmk.id           # direct reference from KV
-  user_assigned_identity_id = azurerm_user_assigned_identity.uami.id # direct reference from KV
+  key_vault_key_id          = module.kv.key_vault_key_id
+  user_assigned_identity_id = module.kv.user_assigned_identity_id
   tags                      = var.tags
-
-  # Note: since infra modules don't have outputs, we reference KV resources directly here.
-  # To allow that, we need data references or shared locals; simplest is to duplicate inside root.
 }
 
 # App Service
@@ -63,7 +60,7 @@ module "cosmos" {
   cosmosdb_name       = var.cosmosdb_name
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
-  key_vault_key_id    = azurerm_key_vault_key.cmk.id
+  key_vault_key_id    = module.kv.key_vault_key_id
 }
 
 # ACR
@@ -72,7 +69,7 @@ module "acr" {
   acr_name                 = var.acr_name
   location                 = var.location
   resource_group_name      = azurerm_resource_group.rg.name
-  key_vault_key_id         = azurerm_key_vault_key.cmk.id
+  key_vault_key_id         = module.kv.key_vault_key_id
   geo_replication_location = null
 }
 

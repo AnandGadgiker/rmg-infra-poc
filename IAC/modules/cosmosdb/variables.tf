@@ -17,3 +17,8 @@ variable "key_vault_key_id" {
   type        = string
   description = "Key Vault CMK ID for encryption at rest"
 }
+
+variable "env" {
+  type        = string
+  description = "Environment label (dev/uat/prod)"
+}
