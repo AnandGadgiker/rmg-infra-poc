@@ -1,6 +1,6 @@
-# Versionless key ID for Cosmos DB, Storage, ACR, etc.
 output "key_vault_key_id" {
-  value       = azurerm_key_vault_key.cmk.key_vault_key_id
+  # Use the versionless ID so Cosmos/Storage/ACR accept it
+  value       = azurerm_key_vault_key.cmk.versionless_id
   description = "Versionless Key Vault key ID (safe for Cosmos/Storage/ACR)"
 }
 
