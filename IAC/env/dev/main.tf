@@ -61,6 +61,7 @@ module "cosmos" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   key_vault_key_id    = module.kv.key_vault_key_id
+  env                 = var.env
 }
 
 # ACR
