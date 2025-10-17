@@ -5,6 +5,7 @@ IAC/
 ├── modules/
 │   ├── keyvault/
 │   │   ├── main.tf
+│	│	├── outputs.tf
 │   │   └── variables.tf
 │   ├── storage_account/
 │   │   ├── main.tf
