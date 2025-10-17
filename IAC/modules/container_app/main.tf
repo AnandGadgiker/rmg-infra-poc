@@ -34,13 +34,11 @@ resource "azurerm_monitor_diagnostic_setting" "diag" {
   target_resource_id         = azurerm_container_app.this.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
-  log {
+  enabled_log {
     category = "ContainerAppConsoleLogs"
-    enabled  = true
   }
 
   metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
