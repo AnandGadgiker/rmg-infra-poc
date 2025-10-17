@@ -111,16 +111,35 @@ module "eh" {
 }
 
 # 8️⃣ Outputs
+# 8️⃣ Outputs
 module "dev_outputs" {
-  source                       = "../../modules/outputs"
-  key_vault_name               = var.key_vault_name
-  key_vault_key_id             = module.kv.key_vault_key_id
-  key_vault_uri                = module.kv.key_vault_uri
-  cosmosdb_name                = var.cosmosdb_name
-  acr_name                     = var.acr_name
-  storage_account_name         = var.storage_account_name
-  eventhub_namespace           = var.eventhub_namespace
-  eventhub_name                = var.eventhub_name
+  source = "../../modules/outputs"
+
+  # Key Vault
+  key_vault_name   = var.key_vault_name
+  key_vault_id     = module.kv.key_vault_id
+  key_vault_key_id = module.kv.key_vault_key_id
+  key_vault_uri    = module.kv.key_vault_uri
+
+  # UAMI
+  user_assigned_identity_id           = module.kv.user_assigned_identity_id
+  user_assigned_identity_principal_id = module.kv.user_assigned_identity_principal_id
+
+  # Storage
+  storage_account_name = var.storage_account_name
+  storage_account_id   = module.stg.storage_account_id
+
+  # Cosmos DB
+  cosmosdb_name = var.cosmosdb_name
+
+  # ACR
+  acr_name = var.acr_name
+
+  # Event Hub
+  eventhub_namespace = var.eventhub_namespace
+  eventhub_name      = var.eventhub_name
+
+  # App Service
   app_service_name             = var.app_service_name
   app_service_default_hostname = "${var.app_service_name}.azurewebsites.net"
 }
