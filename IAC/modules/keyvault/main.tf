@@ -16,40 +16,31 @@ resource "azurerm_key_vault" "kv" {
   }
 
   tags = var.tags
-}
 
-# Access policy for Terraform SP
-resource "azurerm_key_vault_access_policy" "terraform_sp" {
-  key_vault_id = azurerm_key_vault.kv.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = var.terraform_sp_object_id
+  # Access policy for Terraform SP
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = var.terraform_sp_object_id
 
-  key_permissions     = ["Get", "List", "Create", "Delete", "Recover", "Purge", "GetRotationPolicy", "SetRotationPolicy"]
-  secret_permissions  = ["Get", "List", "Set", "Delete"]
-  storage_permissions = ["Get", "List", "Set"]
-}
-
-# Optional: Access policy for provider identity
-resource "azurerm_key_vault_access_policy" "provider_identity" {
-  count        = var.provider_object_id != null ? 1 : 0
-  key_vault_id = azurerm_key_vault.kv.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = var.provider_object_id
-
-  key_permissions    = ["Get", "List", "Encrypt", "Decrypt"]
-  secret_permissions = ["Get", "List"]
-}
-
-# Wait for policy propagation
-resource "null_resource" "wait_for_policy" {
-  provisioner "local-exec" {
-    command = "sleep ${var.policy_propagation_delay}"
+    key_permissions = [
+      "Get", "List", "Create", "Delete", "Recover", "Purge",
+      "GetRotationPolicy", "SetRotationPolicy"
+    ]
+    secret_permissions  = ["Get", "List", "Set", "Delete"]
+    storage_permissions = ["Get", "List", "Set"]
   }
 
-  depends_on = [
-    azurerm_key_vault_access_policy.terraform_sp,
-    azurerm_key_vault_access_policy.provider_identity
-  ]
+  # Optional access policy for provider identity
+  dynamic "access_policy" {
+    for_each = var.provider_object_id != null ? [var.provider_object_id] : []
+    content {
+      tenant_id = data.azurerm_client_config.current.tenant_id
+      object_id = access_policy.value
+
+      key_permissions    = ["Get", "List", "Encrypt", "Decrypt"]
+      secret_permissions = ["Get", "List"]
+    }
+  }
 }
 
 # Customer Managed Key (CMK)
@@ -64,12 +55,7 @@ resource "azurerm_key_vault_key" "cmk" {
     automatic {
       time_before_expiry = "P30D"
     }
-
     expire_after         = "P90D"
     notify_before_expiry = "P29D"
   }
-
-
-
-  depends_on = [null_resource.wait_for_policy]
 }

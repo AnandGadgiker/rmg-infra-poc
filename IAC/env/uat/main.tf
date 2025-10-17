@@ -9,8 +9,14 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    key_vault {
+      purge_soft_deleted_keys_on_destroy = true
+      recover_soft_deleted_keys          = true
+    }
+  }
 }
+
 
 # 1️⃣ Create Resource Group first
 resource "azurerm_resource_group" "rg" {
