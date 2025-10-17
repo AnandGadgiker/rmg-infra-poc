@@ -1,70 +1,52 @@
-# Key Vault
+# Get current Terraform SP (the one running the pipeline)
+data "azurerm_client_config" "current" {}
+
+# -------------------------------
+# Key Vault Resource
+# -------------------------------
 resource "azurerm_key_vault" "kv" {
-  name                     = var.key_vault_name
-  location                 = var.location
-  resource_group_name      = var.resource_group_name
-  tenant_id                = var.tenant_id
-  sku_name                 = "standard"
-  purge_protection_enabled = true
-  tags                     = var.tags
+  name                          = var.name
+  location                      = var.location
+  resource_group_name           = var.resource_group_name
+  tenant_id                     = data.azurerm_client_config.current.tenant_id
+  sku_name                      = var.sku_name
+  soft_delete_enabled           = true
+  purge_protection_enabled      = false
+  public_network_access_enabled = true
+
+  network_acls {
+    default_action = "Allow"
+    bypass         = "AzureServices"
+  }
 }
 
-# Access Policy for Terraform SP
+# -------------------------------
+# Access Policy for Terraform Service Principal
+# -------------------------------
 resource "azurerm_key_vault_access_policy" "terraform_sp" {
   key_vault_id = azurerm_key_vault.kv.id
-  tenant_id    = var.tenant_id
-  object_id    = var.terraform_sp_object_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
 
   key_permissions = [
-    "Get", "List", "Create", "Update", "Delete", "Recover", "Backup", "Restore",
-    "Encrypt", "Decrypt", "Sign", "Verify"
+    "Get",
+    "List",
+    "Create",
+    "Delete",
+    "Recover",
+    "Purge"
   ]
 
   secret_permissions = [
-    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore"
-  ]
-}
-
-# Access Policy for Provider Identity
-resource "azurerm_key_vault_access_policy" "provider_identity" {
-  count        = var.provider_object_id != null ? 1 : 0
-  key_vault_id = azurerm_key_vault.kv.id
-  tenant_id    = var.tenant_id
-  object_id    = var.provider_object_id
-
-  key_permissions = [
-    "Get", "List", "Create", "Update", "Delete", "Recover", "Backup", "Restore", "Encrypt", "Decrypt", "Sign", "Verify"
+    "Get",
+    "List",
+    "Set",
+    "Delete"
   ]
 
-  secret_permissions = [
-    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore"
+  storage_permissions = [
+    "Get",
+    "List",
+    "Set"
   ]
-}
-
-# Optional: Wait for policy propagation
-resource "null_resource" "wait_for_policy" {
-  provisioner "local-exec" {
-    command = "sleep 60"
-  }
-
-  depends_on = [
-    azurerm_key_vault_access_policy.terraform_sp,
-    azurerm_key_vault_access_policy.provider_identity
-  ]
-}
-
-# Customer Managed Key (CMK)
-resource "azurerm_key_vault_key" "cmk" {
-  name         = "cmk-key"
-  key_vault_id = azurerm_key_vault.kv.id
-  key_type     = "RSA"
-  key_size     = 2048
-  key_opts     = ["encrypt", "decrypt"]
-
-  depends_on = [null_resource.wait_for_policy]
-}
-
-# Outputs
-output "key_vault_key_id" {
-  value = azurerm_key_vault_key.cmk.id
 }
