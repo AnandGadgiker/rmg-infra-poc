@@ -1,11 +1,5 @@
 data "azurerm_client_config" "current" {}
 
-# Look up Cosmos DB resource provider service principal in your tenant
-# (requires the azuread provider)
-data "azuread_service_principal" "cosmosdb" {
-  client_id = "a232010e-820c-4083-83bb-3ace5fc29d0b"
-}
-
 resource "azurerm_user_assigned_identity" "uami" {
   name                = "uami-${var.env}"
   location            = var.location
@@ -56,10 +50,10 @@ resource "azurerm_key_vault" "kv" {
     ]
   }
 
-  # Access for Cosmos DB resource provider
+  # Access for Cosmos DB resource provider (hardcoded OID from your error)
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azuread_service_principal.cosmosdb.object_id
+    object_id = "aee58638-604f-491b-83ee-5c1a66c0c874" # Cosmos DB SP OID in your tenant
 
     key_permissions = [
       "Get", "WrapKey", "UnwrapKey"
