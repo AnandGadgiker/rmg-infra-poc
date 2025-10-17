@@ -81,11 +81,19 @@ module "stg" {
   storage_account_name   = var.storage_account_name
   location               = var.location
   resource_group_name    = azurerm_resource_group.rg.name
-  key_vault_key_id       = module.kv.key_vault_key_id
   subnet_id              = var.subnet_id
+  env                    = var.env
   terraform_sp_object_id = var.terraform_sp_object_id
-}
+  tags = merge(
+    var.tags,
+    {
+      Owner       = "rmg-devops"
+      Criticality = "High" # mandatory per policy
+    }
+  )
 
+  depends_on = [module.kv]
+}
 # 7️⃣ Event Hub
 module "eh" {
   source              = "../../modules/eventhub"
@@ -101,6 +109,7 @@ module "uat_outputs" {
   source                       = "../../modules/outputs"
   key_vault_name               = var.key_vault_name
   key_vault_key_id             = module.kv.key_vault_key_id
+  key_vault_uri                = module.kv.key_vault_uri
   cosmosdb_name                = var.cosmosdb_name
   acr_name                     = var.acr_name
   storage_account_name         = var.storage_account_name
