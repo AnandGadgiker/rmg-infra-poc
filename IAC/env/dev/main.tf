@@ -100,7 +100,6 @@ module "container_apps" {
   source                       = "../../modules/container_app"
   for_each                     = toset(["app1", "app2", "app3"])
   app_name                     = "${each.key}-${var.env}"
-  location                     = var.location
   resource_group_name          = azurerm_resource_group.rg.name
   container_app_environment_id = azurerm_container_app_environment.cae.id
   image                        = "${module.acrs[replace(each.key, "app", "acr")].acr_login_server}/${each.key}:latest"
