@@ -43,9 +43,9 @@ resource "azurerm_storage_account" "storage" {
     var.tags,
     {
       Env         = var.env
-      Owner       = "cloud-team" # adjust to your org’s policy
-      CostCenter  = "12345"      # adjust to your org’s policy
-      Application = "my-app"     # adjust if required
+      Owner       = "LZ-Support-Teams" # adjust to your org’s policy
+      Environment = "non-prod"         # adjust to your org’s policy
+      Criticality = "Low"              # adjust if required
     }
   )
 }

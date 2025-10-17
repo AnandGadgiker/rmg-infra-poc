@@ -5,6 +5,6 @@ terraform {
     resource_group_name  = "rmg-infra"
     storage_account_name = "rmginfrastate"
     container_name       = "tfstate"
-    key                  = "terraform.uat.tfstate"
+    key                  = "iac/uat/terraform.tfstate"
   }
 }
