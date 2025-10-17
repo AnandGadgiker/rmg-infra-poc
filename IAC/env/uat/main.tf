@@ -37,9 +37,12 @@ module "kv" {
   terraform_sp_object_id = var.terraform_sp_object_id
   provider_object_id     = var.provider_object_id
   env                    = var.env
-  tags = {
-    Owner = "rmg-devops"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Owner = "rmg-devops"
+    }
+  )
 }
 # 3️⃣ App Service Plan + App Service
 module "app_service" {
