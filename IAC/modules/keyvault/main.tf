@@ -58,7 +58,18 @@ resource "azurerm_key_vault_key" "cmk" {
   key_vault_id = azurerm_key_vault.kv.id
   key_type     = "RSA"
   key_size     = 2048
-  key_opts     = ["encrypt", "decrypt"]
+  key_opts     = ["encrypt", "decrypt", "sign", "unwrapKey", "verify", "wrapKey"]
+
+  rotation_policy {
+    automatic {
+      time_before_expiry = "P30D"
+    }
+
+    expire_after         = "P90D"
+    notify_before_expiry = "P29D"
+  }
+
+
 
   depends_on = [null_resource.wait_for_policy]
 }
