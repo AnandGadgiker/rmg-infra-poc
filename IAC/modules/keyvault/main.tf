@@ -35,7 +35,7 @@ resource "azurerm_key_vault" "kv" {
     for_each = var.provider_object_id != null ? [var.provider_object_id] : []
     content {
       tenant_id = data.azurerm_client_config.current.tenant_id
-      object_id = access_policy.value
+      object_id = var.terraform_sp_object_id
 
       key_permissions    = ["Get", "List", "Encrypt", "Decrypt"]
       secret_permissions = ["Get", "List"]
