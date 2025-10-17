@@ -24,12 +24,6 @@ variable "terraform_sp_object_id" {
   description = "Object ID of the SP running Terraform"
 }
 
-variable "provider_object_id" {
-  type        = string
-  default     = null
-  description = "Optional object ID of provider identity requiring Key Vault access"
-}
-
 variable "sku_name" {
   description = "SKU name of the Key Vault (e.g. standard or premium)"
   type        = string

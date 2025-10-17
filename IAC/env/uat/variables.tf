@@ -63,11 +63,6 @@ variable "env" {
   default     = "uat"
 }
 
-variable "provider_object_id" {
-  type        = string
-  description = "Object ID of the provider identity that needs access to Key Vault"
-}
-
 variable "aad_client_secret_value" {
   type        = string
   description = "AAD client secret value for the application"
