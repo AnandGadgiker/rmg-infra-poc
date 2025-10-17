@@ -46,7 +46,7 @@ resource "azurerm_key_vault" "kv" {
     object_id = azurerm_user_assigned_identity.uami.principal_id
 
     key_permissions = [
-      "Get", "List", "Encrypt", "Decrypt","WrapKey","UnwrapKey",
+      "Get", "List", "Encrypt", "Decrypt", "WrapKey", "UnwrapKey",
       "GetRotationPolicy", "SetRotationPolicy"
     ]
   }
