@@ -34,7 +34,6 @@ module "kv" {
   key_vault_name         = var.key_vault_name
   location               = var.location
   resource_group_name    = azurerm_resource_group.rg.name
-  tenant_id              = var.tenant_id
   terraform_sp_object_id = var.terraform_sp_object_id
   provider_object_id     = var.provider_object_id
   env                    = var.env
@@ -77,13 +76,15 @@ module "acr" {
 
 # 6️⃣ Storage Account
 module "stg" {
-  source                 = "../../modules/storage_account"
-  storage_account_name   = var.storage_account_name
-  location               = var.location
-  resource_group_name    = azurerm_resource_group.rg.name
-  subnet_id              = var.subnet_id
-  env                    = var.env
-  terraform_sp_object_id = var.terraform_sp_object_id
+  source                    = "../../modules/storage_account"
+  storage_account_name      = var.storage_account_name
+  location                  = var.location
+  resource_group_name       = azurerm_resource_group.rg.name
+  subnet_id                 = var.subnet_id
+  env                       = var.env
+  terraform_sp_object_id    = var.terraform_sp_object_id
+  key_vault_key_id          = module.kv.key_vault_key_id
+  user_assigned_identity_id = azurerm_user_assigned_identity.uami.id
   tags = merge(
     var.tags,
     {

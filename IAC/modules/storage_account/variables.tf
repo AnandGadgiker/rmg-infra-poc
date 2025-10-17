@@ -1,33 +1,32 @@
 variable "storage_account_name" {
-  type = string
+  type        = string
+  description = "Name of the Storage Account"
 }
 
 variable "location" {
-  type = string
+  type        = string
+  description = "Azure region"
 }
 
 variable "resource_group_name" {
-  type = string
+  type        = string
+  description = "Name of the Resource Group"
 }
 
 variable "subnet_id" {
-  type    = string
-  default = null
-}
-
-variable "key_vault_name" {
-  type    = string
-  default = null
-}
-
-variable "user_assigned_identity_id" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "Optional subnet ID for private endpoint integration"
 }
 
 variable "key_vault_key_id" {
-  type    = string
-  default = null
+  type        = string
+  description = "Resource ID of the Key Vault key used for CMK"
+}
+
+variable "user_assigned_identity_id" {
+  type        = string
+  description = "Resource ID of the User Assigned Managed Identity used for CMK"
 }
 
 variable "tags" {
@@ -37,7 +36,8 @@ variable "tags" {
 }
 
 variable "env" {
-  type = string
+  type        = string
+  description = "Environment name (e.g. dev, uat, prod)"
 }
 
 variable "terraform_sp_object_id" {
@@ -46,7 +46,7 @@ variable "terraform_sp_object_id" {
 }
 
 variable "provider_object_id" {
-  description = "Object ID of the identity used by the Terraform Azure Provider (used for reading existing secrets/keys)"
   type        = string
   default     = null
+  description = "Object ID of the identity used by the Terraform Azure Provider"
 }

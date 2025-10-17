@@ -1,4 +1,3 @@
-# Storage Account
 resource "azurerm_storage_account" "storage" {
   name                          = var.storage_account_name
   resource_group_name           = var.resource_group_name
@@ -9,14 +8,15 @@ resource "azurerm_storage_account" "storage" {
   is_hns_enabled                = true
   public_network_access_enabled = false
 
-  tags = merge(
-    var.tags,
-    {
-      Owner       = "rmg-devops"
-      Env         = var.env
-      Criticality = "High"
-    }
-  )
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [var.user_assigned_identity_id]
+  }
+
+  customer_managed_key {
+    key_vault_key_id          = var.key_vault_key_id
+    user_assigned_identity_id = var.user_assigned_identity_id
+  }
 
   blob_properties {
     delete_retention_policy {
@@ -38,9 +38,12 @@ resource "azurerm_storage_account" "storage" {
     expiration_period = "PT24H"
   }
 
-  # Enable CMK
-  customer_managed_key {
-    key_vault_key_id          = var.key_vault_key_id          # pass the Key Vault key
-    user_assigned_identity_id = var.user_assigned_identity_id # must be a UAMI
-  }
+  tags = merge(
+    var.tags,
+    {
+      Owner       = "rmg-devops"
+      Env         = var.env
+      Criticality = "High"
+    }
+  )
 }

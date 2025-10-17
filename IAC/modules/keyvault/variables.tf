@@ -16,7 +16,7 @@ variable "resource_group_name" {
 variable "tags" {
   type        = map(string)
   default     = {}
-  description = "Tags to assign to the Key Vault"
+  description = "Tags to assign to the Key Vault and UAMI"
 }
 
 variable "terraform_sp_object_id" {
@@ -40,4 +40,9 @@ variable "policy_propagation_delay" {
   type        = number
   default     = 45
   description = "Seconds to wait for Key Vault access policy propagation"
+}
+
+variable "env" {
+  type        = string
+  description = "Environment name (e.g. dev, uat, prod)"
 }
