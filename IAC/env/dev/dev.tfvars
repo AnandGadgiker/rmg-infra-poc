@@ -1,7 +1,7 @@
 env                     = "dev"
 location                = "eastus"
 resource_group_name     = "rg-dev"
-key_vault_name          = "kv-dev-001"
+key_vault_name          = "kv-dev-rmg-001"
 storage_account_name    = "stdev001"
 app_service_plan_name   = "asp-dev-001"
 app_service_name        = "web-dev-001"
