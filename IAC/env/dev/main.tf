@@ -57,6 +57,7 @@ module "app_service" {
   app_settings = {
     ENV = var.env
   }
+  aad_client_secret_value = var.aad_client_secret_value
 
   depends_on = [module.kv, module.stg]
 }

@@ -27,6 +27,7 @@ resource "azurerm_linux_web_app" "this" {
   app_settings = merge({
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
     "WEBSITES_PORT"                       = "8080"
+    "AAD_CLIENT_SECRET"                   = var.aad_client_secret_value
   }, var.app_settings)
 }
 

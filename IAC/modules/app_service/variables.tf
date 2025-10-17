@@ -69,3 +69,10 @@ variable "key_vault_key_id" {
   type        = string
   default     = null
 }
+
+variable "aad_client_secret_value" {
+  description = "AAD client secret value injected into App Service"
+  type        = string
+  sensitive   = true
+  default     = null
+}
