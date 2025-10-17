@@ -3,7 +3,7 @@ data "azurerm_client_config" "current" {}
 # Look up Cosmos DB resource provider service principal in your tenant
 # (requires the azuread provider)
 data "azuread_service_principal" "cosmosdb" {
-  application_id = "a232010e-820c-4083-83bb-3ace5fc29d0b"
+  client_id = "a232010e-820c-4083-83bb-3ace5fc29d0b"
 }
 
 resource "azurerm_user_assigned_identity" "uami" {
