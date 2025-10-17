@@ -25,10 +25,10 @@ resource "azurerm_key_vault" "kv" {
 
   tags = var.tags
 
-  # Access policy for Terraform SP
+  # Access policy for the identity Terraform is actually using
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.terraform_sp_object_id
+    object_id = data.azurerm_client_config.current.object_id
 
     key_permissions = [
       "Get", "List", "Create", "Delete", "Recover", "Purge",
@@ -38,29 +38,13 @@ resource "azurerm_key_vault" "kv" {
     storage_permissions = ["Get", "List", "Set"]
   }
 
-  # Access policy for provider identity (if set)
-  dynamic "access_policy" {
-    for_each = var.provider_object_id != null ? [var.provider_object_id] : []
-    content {
-      tenant_id = data.azurerm_client_config.current.tenant_id
-      object_id = access_policy.value
-
-      key_permissions = [
-        "Get", "List", "Encrypt", "Decrypt",
-        "GetRotationPolicy", "SetRotationPolicy", "Delete"
-      ]
-      secret_permissions  = ["Get", "List"]
-      storage_permissions = []
-    }
-  }
-
   # Access policy for UAMI used by storage account
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_user_assigned_identity.uami.principal_id
 
     key_permissions = [
-      "Get", "List", "Encrypt", "Decrypt",
+      "Get", "List", "Encrypt", "Decrypt", "create",
       "GetRotationPolicy", "SetRotationPolicy", "Delete"
     ]
     secret_permissions  = []
