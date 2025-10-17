@@ -6,7 +6,6 @@ resource "azurerm_container_registry" "acr" {
   admin_enabled       = false
 
   encryption {
-    status           = "enabled"
     key_vault_key_id = var.key_vault_key_id
   }
 
