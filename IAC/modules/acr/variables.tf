@@ -1,25 +1,20 @@
 variable "acr_name" {
+  description = "Name of the Azure Container Registry"
   type        = string
-  description = "ACR name"
 }
 
 variable "location" {
-  type        = string
   description = "Azure region"
+  type        = string
 }
 
 variable "resource_group_name" {
-  type        = string
   description = "Resource group name"
+  type        = string
 }
 
-variable "key_vault_key_id" {
-  type        = string
-  description = "Key Vault CMK ID for encryption at rest"
-}
-
-variable "geo_replication_location" {
-  type        = string
-  description = "Secondary region for ACR geo-replication"
-  default     = null
+variable "tags" {
+  description = "Tags to apply to the ACR"
+  type        = map(string)
+  default     = {}
 }

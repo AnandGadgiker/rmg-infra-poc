@@ -1,11 +1,3 @@
-variable "log_analytics_name" {}
-variable "location" {}
-variable "resource_group_name" {}
-variable "tags" {
-  type    = map(string)
-  default = {}
-}
-
 resource "azurerm_log_analytics_workspace" "law" {
   name                = var.log_analytics_name
   location            = var.location

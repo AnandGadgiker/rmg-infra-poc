@@ -1,14 +1,3 @@
-variable "app_name" {}
-variable "location" {}
-variable "resource_group_name" {}
-variable "container_app_environment_id" {}
-variable "image" {}
-variable "tags" {
-  type    = map(string)
-  default = {}
-}
-variable "log_analytics_workspace_id" {}
-
 resource "azurerm_container_app" "this" {
   name                         = var.app_name
   location                     = var.location
