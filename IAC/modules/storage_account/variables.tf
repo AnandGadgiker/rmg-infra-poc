@@ -39,8 +39,3 @@ variable "env" {
   type        = string
   description = "Environment name (e.g. dev, uat, prod)"
 }
-
-variable "terraform_sp_object_id" {
-  type        = string
-  description = "Object ID of the SP or Managed Identity running Terraform"
-}

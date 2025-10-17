@@ -19,11 +19,6 @@ variable "tags" {
   description = "Tags to assign to the Key Vault and UAMI"
 }
 
-variable "terraform_sp_object_id" {
-  type        = string
-  description = "Object ID of the SP running Terraform"
-}
-
 variable "sku_name" {
   description = "SKU name of the Key Vault (e.g. standard or premium)"
   type        = string

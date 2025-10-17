@@ -30,12 +30,11 @@ resource "azurerm_resource_group" "rg" {
 
 # 2️⃣ Key Vault
 module "kv" {
-  source                 = "../../modules/keyvault"
-  key_vault_name         = var.key_vault_name
-  location               = var.location
-  resource_group_name    = azurerm_resource_group.rg.name
-  terraform_sp_object_id = var.terraform_sp_object_id
-  env                    = var.env
+  source              = "../../modules/keyvault"
+  key_vault_name      = var.key_vault_name
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  env                 = var.env
   tags = merge(
     var.tags,
     {
@@ -84,7 +83,6 @@ module "stg" {
   resource_group_name       = azurerm_resource_group.rg.name
   subnet_id                 = var.subnet_id
   env                       = var.env
-  terraform_sp_object_id    = var.terraform_sp_object_id
   key_vault_key_id          = module.kv.key_vault_key_id
   user_assigned_identity_id = azurerm_user_assigned_identity.uami.id
   tags = merge(

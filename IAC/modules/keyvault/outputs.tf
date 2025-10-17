@@ -13,7 +13,17 @@ output "key_vault_name" {
   description = "Key Vault name"
 }
 
+output "key_vault_id" {
+  value       = azurerm_key_vault.kv.id
+  description = "Resource ID of the Key Vault"
+}
+
 output "user_assigned_identity_id" {
   value       = azurerm_user_assigned_identity.uami.id
   description = "Resource ID of the UAMI for CMK"
+}
+
+output "user_assigned_identity_principal_id" {
+  value       = azurerm_user_assigned_identity.uami.principal_id
+  description = "Principal ID of the UAMI for role assignments and access policies"
 }
