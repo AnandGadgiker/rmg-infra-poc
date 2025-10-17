@@ -12,9 +12,9 @@ resource "azurerm_storage_account" "storage" {
   tags = merge(
     var.tags,
     {
-      Owner       = "rmg-devops" # mandatory
-      Env         = var.env      # mandatory
-      Criticality = "High"       # mandatory per policy
+      Owner       = "rmg-devops"
+      Env         = var.env
+      Criticality = "High"
     }
   )
 
@@ -37,6 +37,21 @@ resource "azurerm_storage_account" "storage" {
   sas_policy {
     expiration_period = "PT24H"
   }
+
+  # Placeholder for CMK (required but ignored)
+  customer_managed_key {}
+
+  lifecycle {
+    ignore_changes = [
+      customer_managed_key,
+    ]
+  }
+}
+
+# Customer Managed Key linking Storage Account to Key Vault
+resource "azurerm_storage_account_customer_managed_key" "stg_cmk" {
+  storage_account_id = azurerm_storage_account.storage.id
+  key_vault_key_id   = var.key_vault_key_id
 }
 
 # Private Endpoint

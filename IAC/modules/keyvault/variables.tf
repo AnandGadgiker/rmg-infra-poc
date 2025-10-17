@@ -13,14 +13,15 @@ variable "resource_group_name" {
   description = "Name of the Resource Group"
 }
 
-variable "tenant_id" {
-  type        = string
-  description = "Azure AD tenant ID"
-}
-
 variable "terraform_sp_object_id" {
   type        = string
   description = "Object ID of the SP or Managed Identity running Terraform"
+}
+
+variable "provider_object_id" {
+  type        = string
+  default     = null
+  description = "Object ID of the provider identity (optional) that needs access to Key Vault"
 }
 
 variable "tags" {
@@ -37,12 +38,6 @@ variable "policy_propagation_delay" {
 
 variable "env" {
   type = string
-}
-
-variable "provider_object_id" {
-  type        = string
-  default     = null
-  description = "Object ID of the provider identity (optional) that needs access to Key Vault"
 }
 
 variable "sku_name" {
