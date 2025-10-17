@@ -27,6 +27,8 @@ resource "azurerm_container_app" "this" {
   }
 
   tags = var.tags
+
+  depends_on = [azurerm_role_assignment.acr_pull]
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diag" {
