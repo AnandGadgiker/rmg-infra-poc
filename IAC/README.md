@@ -1,12 +1,19 @@
 IAC/
-├── README.md
 ├── backend.tf
 ├── providers.tf
+├── versions.tf
 ├── modules/
-│   ├── acr/
+│   ├── keyvault/
 │   │   ├── main.tf
 │   │   └── variables.tf
+│   ├── storage_account/
+│   │   ├── main.tf
+│ 	│ 	├── outputs.tf
+│   │   └── variables.tf
 │   ├── app_service/
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   ├── acr/
 │   │   ├── main.tf
 │   │   └── variables.tf
 │   ├── cosmosdb/
@@ -15,21 +22,17 @@ IAC/
 │   ├── eventhub/
 │   │   ├── main.tf
 │   │   └── variables.tf
-│   ├── keyvault/
-│   │   ├── main.tf
-│   │   └── variables.tf
-│   ├── outputs/
-│   │   ├── main.tf
-│   │   └── variables.tf
-│   └── storage_account/
+│   └── outputs/
 │       ├── main.tf
 │       └── variables.tf
-├── environments/
-│   ├── dev/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   └── dev.tfvars
-│   └── uat/
-│       ├── main.tf
-│       ├── variables.tf
-│       └── uat.tfvars
+└── environments/
+    ├── dev/
+	│	├─backend.tf
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── dev.tfvars
+    └── uat/
+		├─backend.tf
+        ├── main.tf
+        ├── variables.tf
+        └── uat.tfvars
