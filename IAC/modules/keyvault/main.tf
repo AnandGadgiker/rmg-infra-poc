@@ -33,18 +33,18 @@ resource "azurerm_key_vault_access_policy" "provider_identity" {
   object_id    = var.provider_object_id
 
   key_permissions = [
-    "Get", "List", "Encrypt", "Decrypt"
+    "Get", "List", "Create", "Update", "Delete", "Recover", "Backup", "Restore", "Encrypt", "Decrypt", "Sign", "Verify"
   ]
 
   secret_permissions = [
-    "Get", "List"
+    "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore"
   ]
 }
 
 # Optional: Wait for policy propagation
 resource "null_resource" "wait_for_policy" {
   provisioner "local-exec" {
-    command = "sleep 45"
+    command = "sleep 60"
   }
 
   depends_on = [
