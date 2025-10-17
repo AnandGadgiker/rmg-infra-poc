@@ -108,6 +108,19 @@ module "container_apps" {
   log_analytics_workspace_id   = module.log_analytics.log_analytics_id
 }
 
+# AcrPull Role Assignments
+resource "azurerm_role_assignment" "acr_pull" {
+  for_each = {
+    for app in ["app1", "app2", "app3"] : app => {
+      acr_id    = module.acrs[replace(app, "app", "acr")].acr_id
+      principal = module.container_apps[app].container_app_identity_id
+    }
+  }
+
+  scope                = each.value.acr_id
+  role_definition_name = "AcrPull"
+  principal_id         = each.value.principal
+}
 
 # -------------------------------
 # Updated: Outputs aggregator
