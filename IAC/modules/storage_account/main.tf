@@ -38,10 +38,14 @@ resource "azurerm_storage_account" "storage" {
     expiration_period = "PT24H"
   }
 
+  # ✅ Ensure mandatory tags are present
   tags = merge(
     var.tags,
     {
-      Env = var.env
+      Env         = var.env
+      Owner       = "cloud-team" # adjust to your org’s policy
+      CostCenter  = "12345"      # adjust to your org’s policy
+      Application = "my-app"     # adjust if required
     }
   )
 }
