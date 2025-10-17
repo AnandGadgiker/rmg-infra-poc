@@ -1,9 +1,14 @@
-output "key_vault_key_id" {
-  description = "The ID of the Key Vault Key for CMK"
-  value       = azurerm_key_vault_key.cmk.id
+output "key_vault_id" {
+  value       = azurerm_key_vault.kv.id
+  description = "ID of the Key Vault"
 }
 
 output "key_vault_uri" {
-  description = "The URI of the Key Vault"
   value       = azurerm_key_vault.kv.vault_uri
+  description = "URI of the Key Vault"
+}
+
+output "key_vault_key_id" {
+  value       = azurerm_key_vault_key.cmk.id
+  description = "ID of the Key Vault Key (Customer Managed Key)"
 }

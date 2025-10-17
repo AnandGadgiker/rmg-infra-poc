@@ -24,17 +24,6 @@ resource "azurerm_cosmosdb_account" "db" {
     type = "SystemAssigned"
   }
 
+  # Link to Key Vault key (CMK)
   key_vault_key_id = var.key_vault_key_id
-
-  # ✅ Customer Managed Key
-  customer_managed_key {
-    key_vault_key_id = var.key_vault_key_id
-  }
-
-  lifecycle {
-    ignore_changes = [
-      customer_managed_key
-    ]
-  }
-
 }
