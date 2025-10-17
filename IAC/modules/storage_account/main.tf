@@ -34,9 +34,9 @@ resource "azurerm_storage_account" "storage" {
     }
   }
 
-  sas_policy {
-    expiration_period = "PT24H"
-  }
+  # sas_policy {
+  #  expiration_period = "PT24H"
+  # }
 
   # ✅ Ensure mandatory tags are present
   tags = merge(
