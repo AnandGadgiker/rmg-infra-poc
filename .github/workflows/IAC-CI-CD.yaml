@@ -50,6 +50,9 @@ jobs:
               "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
+      - name: Who am I?
+        run: |
+          az account show --query "{user: user.name, sp: user.type, oid: user.oid}" -o json
 
       # Clean cache to ensure fresh state each run
       - name: Clean Terraform cache
