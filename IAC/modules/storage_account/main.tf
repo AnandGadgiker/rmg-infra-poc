@@ -41,9 +41,7 @@ resource "azurerm_storage_account" "storage" {
   tags = merge(
     var.tags,
     {
-      Owner       = "rmg-devops"
-      Env         = var.env
-      Criticality = "High"
+      Env = var.env
     }
   )
 }

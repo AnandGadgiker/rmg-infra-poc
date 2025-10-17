@@ -1,6 +1,6 @@
 variable "storage_account_name" {
   type        = string
-  description = "Name of the Storage Account"
+  description = "Globally unique storage account name"
 }
 
 variable "location" {
@@ -10,32 +10,26 @@ variable "location" {
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of the Resource Group"
-}
-
-variable "subnet_id" {
-  type        = string
-  default     = null
-  description = "Optional subnet ID for private endpoint integration"
-}
-
-variable "key_vault_key_id" {
-  type        = string
-  description = "Resource ID of the Key Vault key used for CMK"
-}
-
-variable "user_assigned_identity_id" {
-  type        = string
-  description = "Resource ID of the User Assigned Managed Identity used for CMK"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Tags to assign to the Storage Account"
+  description = "Resource group name"
 }
 
 variable "env" {
   type        = string
-  description = "Environment name (e.g. dev, uat, prod)"
+  description = "Environment label (dev/uat/prod)"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Common resource tags"
+  default     = {}
+}
+
+variable "key_vault_key_id" {
+  type        = string
+  description = "Key Vault CMK ID used for encryption"
+}
+
+variable "user_assigned_identity_id" {
+  type        = string
+  description = "Resource ID of the UAMI bound to the storage account"
 }

@@ -1,29 +1,25 @@
-resource "azurerm_cosmosdb_account" "db" {
+resource "azurerm_cosmosdb_account" "cosmos" {
   name                = var.cosmosdb_name
   location            = var.location
   resource_group_name = var.resource_group_name
   offer_type          = "Standard"
   kind                = "GlobalDocumentDB"
 
-  automatic_failover_enabled        = true
-  multiple_write_locations_enabled  = false
-  is_virtual_network_filter_enabled = true
-  public_network_access_enabled     = false
-  local_authentication_disabled     = true
-
   consistency_policy {
-    consistency_level = "Session"
+    consistency_level       = "Session"
+    max_interval_in_seconds = 5
+    max_staleness_prefix    = 100
   }
 
-  geo_location {
-    location          = var.location
-    failover_priority = 0
+  enable_automatic_failover = false
+
+  capabilities {
+    name = "EnableServerless"
   }
 
-  identity {
-    type = "SystemAssigned"
-  }
+  default_identity_type = "SystemAssigned"
 
-  # Link to Key Vault key (CMK)
-  key_vault_key_id = var.key_vault_key_id
+  customer_managed_key {
+    key_vault_key_id = var.key_vault_key_id
+  }
 }

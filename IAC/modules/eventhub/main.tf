@@ -1,38 +1,17 @@
-resource "azurerm_eventhub_namespace" "namespace" {
-  name                = var.eventhub_namespace
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  sku                 = "Standard"
-
-  timeouts {
-    create = "10m"
-    update = "10m"
-    delete = "10m"
-  }
+resource "azurerm_eventhub_namespace" "ns" {
+  name                     = var.eventhub_namespace
+  location                 = var.location
+  resource_group_name      = var.resource_group_name
+  sku                      = "Standard"
+  capacity                 = 1
+  auto_inflate_enabled     = true
+  maximum_throughput_units = 4
 }
 
-resource "azurerm_eventhub" "hub" {
+resource "azurerm_eventhub" "eh" {
   name                = var.eventhub_name
-  namespace_name      = azurerm_eventhub_namespace.namespace.name
   resource_group_name = var.resource_group_name
+  namespace_name      = azurerm_eventhub_namespace.ns.name
   partition_count     = 2
-  message_retention   = 1
-
-  depends_on = [azurerm_eventhub_namespace.namespace]
-}
-
-resource "azurerm_private_endpoint" "eventhub_pe" {
-  name                = "${var.eventhub_name}-pe"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = var.subnet_id
-
-  private_service_connection {
-    name                           = "${var.eventhub_name}-psc"
-    private_connection_resource_id = azurerm_eventhub_namespace.namespace.id
-    subresource_names              = ["namespace"]
-    is_manual_connection           = false
-  }
-
-  depends_on = [azurerm_eventhub_namespace.namespace]
+  message_retention   = 7
 }
