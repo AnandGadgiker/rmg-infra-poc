@@ -84,7 +84,7 @@ resource "azurerm_key_vault_key" "cmk" {
     notify_before_expiry = "P29D"
   }
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  #  lifecycle {
+  #    prevent_destroy = true
+  #  }
 }
