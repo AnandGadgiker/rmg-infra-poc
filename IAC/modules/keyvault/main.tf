@@ -1,5 +1,11 @@
 data "azurerm_client_config" "current" {}
 
+# Look up Cosmos DB resource provider service principal in your tenant
+# (requires the azuread provider)
+data "azuread_service_principal" "cosmosdb" {
+  application_id = "a232010e-820c-4083-83bb-3ace5fc29d0b"
+}
+
 resource "azurerm_user_assigned_identity" "uami" {
   name                = "uami-${var.env}"
   location            = var.location
@@ -27,7 +33,7 @@ resource "azurerm_key_vault" "kv" {
 
   tags = var.tags
 
-  # Access for the Terraform identity
+  # Access for the Terraform identity (SP from GitHub Actions)
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = data.azurerm_client_config.current.object_id
@@ -40,14 +46,23 @@ resource "azurerm_key_vault" "kv" {
     storage_permissions = ["Get", "List", "Set"]
   }
 
-  # Access for the UAMI
+  # Access for the UAMI (used by Storage, ACR, etc.)
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_user_assigned_identity.uami.principal_id
 
     key_permissions = [
-      "Get", "List", "Encrypt", "Decrypt", "WrapKey", "UnwrapKey",
-      "GetRotationPolicy", "SetRotationPolicy"
+      "Get", "WrapKey", "UnwrapKey", "Encrypt", "Decrypt"
+    ]
+  }
+
+  # Access for Cosmos DB resource provider
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azuread_service_principal.cosmosdb.object_id
+
+    key_permissions = [
+      "Get", "WrapKey", "UnwrapKey"
     ]
   }
 }
